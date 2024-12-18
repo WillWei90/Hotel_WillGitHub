@@ -1,0 +1,123 @@
+﻿@model IEnumerable<HotelBookingSystem.Models.Member>
+
+@{
+    Layout = "~/Views/Shared/_LayoutConsole.cshtml"; // 使用全局布局
+    ViewData["Title"] = "會員管理";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center">會員管理</h2>
+
+    <!-- 搜尋表單 -->
+    <form method="get" class="mt-4">
+        <div class="row mb-3">
+            <div class="col">
+                <input type="text" name="searchTerm" class="form-control" value="@ViewBag.SearchTerm" placeholder="搜尋會員 (姓名或電話)" />
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">搜尋</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- 會員列表 -->
+    @if (Model != null && Model.Any())
+    {
+        <h3 class="mt-4">會員列表</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>會員編號</th>
+                    <th>姓名</th>
+                    <th>電話</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var member in Model)
+                {
+                    <tr>
+                        <td>@member.MemberNo</td>
+                        <td>@member.UserName</td>
+                        <td>@member.Phone</td>
+                        <td>
+                            <!-- 查看訂單按鈕 -->
+                            <button class="btn btn-info btn-sm" onclick="viewOrders(@member.MemberNo)">查看訂單</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="text-center text-muted">請輸入查詢條件以檢視會員資料。</p>
+    }
+
+    <!-- 訂單列表 -->
+    <div id="orderList" class="mt-5" style="display:none;">
+        <h3 class="text-center">訂單列表</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>訂單號</th>
+                    <th>房號</th>
+                    <th>房名</th>
+                    <th>開始日期</th>
+                    <th>結束日期</th>
+                    <th>付款狀態</th>
+                    <th>取消狀態</th>
+                </tr>
+            </thead>
+            <tbody id="orderListContent">
+                <!-- 動態生成 -->
+            </tbody>
+        </table>
+        <button class="btn btn-secondary" onclick="hideOrders()">隱藏訂單</button>
+    </div>
+</div>
+
+<script>
+    // 顯示訂單
+            function viewOrders(memberNo) {
+        fetch(`/ConsoleMember/GetOrdersByMemberNo?memberNo=${memberNo}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const orders = data.orders;
+                    const orderListContent = document.getElementById("orderListContent");
+                    orderListContent.innerHTML = ""; // 清空現有內容
+
+                    orders.forEach(order => {
+                        const row = `
+                            <tr>
+                                <td>${order.orderNo}</td>
+                                <td>${order.roomNo}</td>
+                                <td>${order.roomName || "未指定"}</td>
+                                <td>${order.startDate ? new Date(order.startDate).toLocaleDateString() : "未指定"}</td>
+                                <td>${order.endDate ? new Date(order.endDate).toLocaleDateString() : "未指定"}</td>
+                                <td>${order.isPay ? "已付款" : "未付款"}</td>
+                                <td>${order.cancel ? "已取消" : "有效"}</td>
+                            </tr>
+                        `;
+                        orderListContent.insertAdjacentHTML("beforeend", row);
+                    });
+
+                    document.getElementById("orderList").style.display = "block";
+                } else {
+                    alert("無法獲取訂單資料: " + data.message);
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching orders:", error);
+                alert("發生錯誤，請稍後再試。");
+            });
+    }
+
+    // 隱藏訂單
+    function hideOrders() {
+        document.getElementById("orderList").style.display = "none";
+    }
+</script>
+
+

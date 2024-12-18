@@ -1,0 +1,212 @@
+﻿@model IEnumerable<HotelBookingSystem.Models.Room>
+
+@{
+    Layout = "~/Views/Shared/_LayoutConsole.cshtml";
+    ViewData["Title"] = "客房管理";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>客房管理</h2>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addRoomModal">新增房間</button>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>房號</th>
+            <th>名稱</th>
+            <th>價格</th>
+            <th>房型</th>
+            <th>地址</th>
+            <th>內容</th>
+            <th>狀態</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var room in Model)
+        {
+            <tr>
+                <td>@room.RoomNo</td>
+                <td>@room.RoomName</td>
+                <td>@room.Price</td>
+                <td>@room.RoomType</td>
+                <td>@room.Address</td>
+                <td>@room.RoomContent</td>
+                <td>@(room.Activate ? "啟用" : "停用")</td>
+                <td>
+                    <!-- 修改按鈕 -->
+                    <button class="btn btn-warning btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#editRoomModal"
+                            onclick="loadEditRoom(@room.RoomNo, '@Html.Raw(@room.RoomName.Replace("'", "\\'"))', @room.Price, '@Html.Raw(@room.RoomType.Replace("'", "\\'"))', '@Html.Raw(@room.Address.Replace("'", "\\'"))', '@Html.Raw(@room.RoomContent.Replace("'", "\\'"))', @room.Activate.ToString().ToLower())">
+                        修改
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- 修改房間模態視窗 -->
+<div class="modal fade" id="editRoomModal" tabindex="-1" aria-labelledby="editRoomModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="Edit" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editRoomModalLabel">修改房間</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="EditRoomNo" name="RoomNo" />
+                    <div class="mb-3">
+                        <label for="EditRoomName" class="form-label">名稱</label>
+                        <input type="text" id="EditRoomName" name="RoomName" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="EditPrice" class="form-label">價格</label>
+                        <input type="number" id="EditPrice" name="Price" class="form-control" step="0.01" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="EditRoomType" class="form-label">房型</label>
+                        <input type="text" id="EditRoomType" name="RoomType" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="EditAddress" class="form-label">地址</label>
+                        <input type="text" id="EditAddress" name="Address" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="EditRoomContent" class="form-label">內容</label>
+                        <textarea id="EditRoomContent" name="RoomContent" class="form-control" required></textarea>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input type="checkbox" class="form-check-input" id="EditActivate" name="Activate" value="true" />
+                        <input type="hidden" name="Activate" value="false" />
+                        <label class="form-check-label" for="EditActivate" id="activateLabel">啟用</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-warning">修改</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- 新增房間模態視窗 -->
+<div class="modal fade" id="addRoomModal" tabindex="-1" aria-labelledby="addRoomModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="Add" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addRoomModalLabel">新增房間</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+                    <div class="mb-3">
+                        <label for="RoomName" class="form-label">名稱</label>
+                        <input type="text" id="RoomName" name="RoomName" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="Price" class="form-label">價格</label>
+                        <input type="number" id="Price" name="Price" class="form-control" step="0.01" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="RoomType" class="form-label">房型</label>
+                        <input type="text" id="RoomType" name="RoomType" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="Address" class="form-label">地址</label>
+                        <input type="text" id="Address" name="Address" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="RoomContent" class="form-label">內容</label>
+                        <textarea id="RoomContent" name="RoomContent" class="form-control" required></textarea>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input type="checkbox" class="form-check-input" id="Activate" name="Activate" value="true" />
+                        <input type="hidden" name="Activate" value="false" />
+                        <label class="form-check-label" for="Activate">啟用</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary">新增</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function loadEditRoom(roomNo, roomName, price, roomType, address, roomContent, activate) {
+        console.log("Loading room data...");
+        console.log({ roomNo, roomName, price, roomType, address, roomContent, activate });
+
+        // 將數據填充到模態框內的表單字段
+        document.getElementById("EditRoomNo").value = roomNo;
+        document.getElementById("EditRoomName").value = roomName;
+        document.getElementById("EditPrice").value = price;
+        document.getElementById("EditRoomType").value = roomType;
+        document.getElementById("EditAddress").value = address;
+        document.getElementById("EditRoomContent").value = roomContent;
+
+        // 設置開關按鈕的狀態
+        const activateCheckbox = document.getElementById("EditActivate");
+        const activateLabel = document.getElementById("activateLabel");
+        activateCheckbox.checked = activate === true; // 確保布林值正確
+        activateLabel.textContent = activate ? "啟用" : "停用";
+    }
+
+    // 當開關狀態改變時，更新標籤文字
+    document.getElementById("EditActivate").addEventListener("change", function () {
+        const label = document.getElementById("activateLabel");
+        label.textContent = this.checked ? "啟用" : "停用";
+    });
+</script>
+
+<!-- 系統訊息模态弹窗 -->
+@if (TempData["Success"] != null || TempData["Error"] != null)
+{
+    <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="messageModalLabel">系統消息</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @if (TempData["Success"] != null)
+                    {
+                        <div class="alert alert-success">
+                            @TempData["Success"]
+                        </div>
+                    }
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            @TempData["Error"]
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    // 如果有 TempData 消息則顯示模態框
+    window.onload = function () {
+        var messageModal = document.getElementById('messageModal');
+        if (messageModal) {
+            var modal = new bootstrap.Modal(messageModal);
+            modal.show();
+        }
+    };
+</script>

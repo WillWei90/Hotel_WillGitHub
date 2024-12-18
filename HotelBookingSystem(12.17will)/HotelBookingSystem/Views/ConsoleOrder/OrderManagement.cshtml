@@ -1,0 +1,67 @@
+﻿@model IEnumerable<HotelBookingSystem.Models.Order>
+
+@{
+    Layout = "~/Views/Shared/_LayoutConsole.cshtml"; // 使用 _Layout.cshtml 作為布局
+    ViewData["Title"] = "訂單管理";
+}
+
+<h2>訂單管理</h2>
+
+<!-- 篩選條件表單 -->
+<form method="get">
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label for="OrderNo" class="form-label">訂單編號</label>
+            <input type="text" name="OrderNo" id="OrderNo" class="form-control" value="@ViewData["OrderNo"]" placeholder="輸入訂單編號">
+        </div>
+        <div class="col-md-4">
+            <label for="OrderDate" class="form-label">訂單日期</label>
+            <input type="date" name="OrderDate" id="OrderDate" class="form-control" value="@ViewData["OrderDate"]">
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">篩選</button>
+        </div>
+    </div>
+</form>
+
+<!-- 訂單表格 -->
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>訂單編號</th>
+            <th>會員編號</th>
+            <th>訂單日期</th>
+            <th>房間編號</th>
+            <th>房間名稱</th>
+            <th>入住日期</th>
+            <th>退房日期</th>
+            <th>是否付款</th>
+            <th>是否取消</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="9" class="text-center text-muted">無符合條件的訂單</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var order in Model)
+            {
+                <tr>
+                    <td>@order.OrderNo</td>
+                    <td>@order.MemberNo</td>
+                    <td>@order.OrderDate.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                    <td>@order.RoomNo</td>
+                    <td>@order.RoomName</td>
+                    <td>@(order.StartDate.ToString("yyyy-MM-dd") ?? "無")</td>
+                    <td>@(order.EndDate.ToString("yyyy-MM-dd") ?? "無")</td>
+                    <td>@(order.IsPay ? "已付款" : "未付款")</td>
+                    <td>@(order.Cancel ? "已取消" : "有效")</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

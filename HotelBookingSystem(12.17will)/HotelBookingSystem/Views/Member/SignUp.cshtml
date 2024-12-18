@@ -1,0 +1,153 @@
+﻿@{
+    ViewData["Title"] = "SignIn Page";
+}
+
+@model MemberAccount
+
+@section styles {
+    <style>
+        .signup-container {
+            position: absolute; /* 絕對定位，方便放置於視窗中央 */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* 將容器的中心點對齊到視窗中心 */
+            width: 600px; /* 設定表單寬度 */
+            padding: 20px; /* 增加內部空間 */
+            background-color: #fff; /* 背景色 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 加陰影增加層次感 */
+            border-radius: 8px; /* 圓角邊框 */
+            text-align: center; /* 內容置中 */
+        }
+
+            .signup-container label {
+                display: block;
+                margin-bottom: 8px;
+            }
+
+            .signup-container input {
+                margin-bottom: 12px;
+                padding: 8px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .signup-container button {
+                padding: 10px 20px;
+                background-color: #007bff;
+                color: #fff;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+                .signup-container button:hover {
+                    background-color: #0056b3;
+                }
+
+            .signup-container p {
+                margin-top: 12px;
+            }
+    </style>
+}
+
+<div class="signup-container">
+    <h2>註冊帳號</h2>
+    <br />
+
+    <!--表單讓使用者新增, 表單填完按下新增後, 透過post回到MemberController裡的SignUp(MemberAccount user)-->
+    <form method="post" action="/Member/SignUp">
+        <div class="form-group row">
+            <label for="inputUserName" class="col-sm-2">信箱</label>
+            <div class="col-sm-10">
+                <input type="text"
+                       id="inputUserName"
+                       name="UserName"
+                       class="form-control"
+                       placeholder="輸入信箱"
+                       value="@(ViewData["ValidUserName"] ?? "")" // 保留有效輸入 />
+                <span asp-validation-for="UserName" id="userNameStatus" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="inputPasswd" class="col-sm-2">密碼</label>
+            <div class="col-sm-10">
+                <input type="password"
+                       id="inputPassword"
+                       name="Password"
+                       class="form-control"
+                       placeholder="密碼至少8字元且有一個字母和一個數字"
+                       // 密碼不保留 />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="inputName" class="col-sm-2">手機</label>
+            <div class="col-sm-10">
+                <input type="text"
+                       id="inputPhone"
+                       name="Phone"
+                       class="form-control"
+                       placeholder="輸入手機"
+                       value="@(ViewData["ValidPhone"] ?? "")" // 保留有效輸入 />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <button type="submit" id="bt2" class="btn-submit">註冊</button>
+        </div>
+    </form>
+</div>
+
+<!--@@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}-->
+
+@section scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script>
+        //當使用者在帳號輸入欄位輸入內容時, 會觸發 AJAX 請求檢查帳號是否已存在
+        //根據 AJAX 返回的結果, 會更新 #userNameStatus 元素的文字內容:
+        $("#inputUserName").on("input", function () {
+            var userName = $(this).val();
+            console.log("haha",userName);
+            $.ajax({
+                type: "POST",
+                url: "/Member/OnSubmit",
+                data: JSON.stringify({ UserName: userName }),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (result) {
+                    if (result == "帳號已存在") {
+                        $("#userNameStatus").text(result);
+                    } else {
+                        $("#userNameStatus").text(result);
+                    }
+                }
+            });
+        });
+
+        //在註冊按鈕的 submit 事件中,再次檢查帳號是否已存在,如果不存在則提交表單
+        $("form").submit(function (e) {
+            e.preventDefault();
+            var userName = $("#inputUserName").val();
+            $.ajax({
+                type: "POST",
+                url: "/Member/OnSubmit",
+                data: JSON.stringify({ UserName: userName }),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (result) {
+                    if (result == "帳號已存在") {
+                        $("#userNameStatus").text(result);
+                    } else {
+                        $("form").off("submit").submit();
+                    }
+                }
+            });
+        });
+    </script>
+    
+}
+

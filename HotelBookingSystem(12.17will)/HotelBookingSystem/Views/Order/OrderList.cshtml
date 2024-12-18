@@ -1,0 +1,59 @@
+﻿@model IEnumerable<HotelBookingSystem.Models.Order>
+
+@{
+    ViewData["Title"] = "查詢訂單";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">查詢訂單</h2>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success text-center">@TempData["SuccessMessage"]</div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger text-center">@TempData["ErrorMessage"]</div>
+    }
+
+    @if (Model.Any())
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>訂單編號</th>
+                    <th>房間號</th>
+                    <th>會員編號</th>
+                    <th>訂單日期</th>
+                    <th>入住日期</th>
+                    <th>退房日期</th>
+                    <th>是否付款</th>
+                    <th>訂房狀態</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in Model)
+                {
+                    <tr>
+                        <td>@order.OrderNo</td>
+                        <td>@order.RoomNo</td>
+                        <td>@order.MemberNo</td>
+                        <td>@order.OrderDate.ToString("yyyy-MM-dd")</td>
+                        <td>@order.StartDate.ToString("yyyy-MM-dd")</td>
+                        <td>@order.EndDate.ToString("yyyy-MM-dd")</td>
+                        <td>@(order.IsPay ? "是" : "否")</td>
+                        <td>@(order.Cancel ? "已取消" : "確認訂房")</td>
+                        <td>
+                            <a href="@Url.Action("OrderDetails", "Order", new { orderNo = order.OrderNo })" class="btn btn-primary">查看詳情</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>目前沒有任何訂單。</p>
+    }
+</div>

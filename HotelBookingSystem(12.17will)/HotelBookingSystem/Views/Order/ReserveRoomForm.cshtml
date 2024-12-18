@@ -1,0 +1,43 @@
+﻿@model HotelBookingSystem.Models.ReserveRoomViewModel
+
+@{
+    ViewData["Title"] = "預訂房間";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">預訂房間</h2>
+    <form asp-action="ReserveRoom" method="post">
+        <div class="card shadow p-4">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="RoomNo" class="form-label">房間編號</label>
+                    <input type="text" class="form-control" id="RoomNo" name="RoomNo" value="@Model.RoomNo" readonly />
+                </div>
+                <div class="col-md-6">
+                    <label for="RoomName" class="form-label">房間名稱</label>
+                    <input type="text" class="form-control" id="RoomName" name="RoomName" value="@Model.RoomName" readonly />
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="Price" class="form-label">價格</label>
+                    <input type="text" class="form-control" id="Price" name="Price" value="@Model.Price" readonly />
+                </div>
+                <div class="col-md-6">
+                    <label for="StartDate" class="form-label">入住日期</label>
+                    <input type="date" class="form-control" id="StartDate" name="StartDate" value="@Model.StartDate.ToString("yyyy-MM-dd")" required />
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="EndDate" class="form-label">退房日期</label>
+                    <input type="date" class="form-control" id="EndDate" name="EndDate" value="@Model.EndDate.ToString("yyyy-MM-dd")" required />
+                </div>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">確認預訂</button>
+            </div>
+        </div>
+    </form>
+</div>

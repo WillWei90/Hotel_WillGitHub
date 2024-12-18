@@ -1,0 +1,238 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Basic -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!-- Site Metas -->
+    <link rel="icon" href="images/fevicon.png" type="image/gif" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+
+    <title>飯店</title>
+
+
+    <!-- bootstrap core css -->
+    <link rel="stylesheet" type="text/css" href="~/css/bootstrap.css" />
+
+    <!-- fonts style -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,600,700&display=swap" rel="stylesheet" />
+
+    <!-- font awesome style -->
+    <link href="~/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="~/css/style.css" rel="stylesheet" />
+    <!-- responsive style -->
+    <link href="~/css/responsive.css" rel="stylesheet" />
+
+    <style>
+        /* 固定 footer 在頁面底部 */
+        .fixed-footer {
+            position: fixed; /* 固定定位 */
+            bottom: 0; /* 緊貼頁面底部 */
+            left: 0; /* 與左側對齊 */
+            width: 100%; /* 占滿寬度 */
+            background-color: #f8f9fa; /* 背景色 */
+            text-align: center; /* 文字置中 */
+            padding: 10px 0; /* 上下內距 */
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* 增加陰影效果 */
+        }
+
+        /* 頁面其他部分的樣式，避免被 footer 遮住 */
+        body {
+            margin-bottom: 50px; /* 增加與 footer 的距離，確保內容不被遮蓋 */
+        }
+    </style>
+
+    @RenderSection("styles", required: false)
+
+</head>
+
+<body>
+    <div class="hero_area">
+        <!-- Header Section -->
+        <header class="header_section long_section px-0">
+            <nav class="navbar navbar-expand-lg custom_nav-container ">
+                <a class="navbar-brand" href="~/Home/Index">
+                    <span>飯店</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class=""> </span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <div class="d-flex mx-auto flex-column flex-lg-row align-items-center">
+                        <ul class="navbar-nav">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="~/Member/Index">首頁</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="~/Member/About">關於飯店</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="~/Home/Furniture">房型介紹</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="~/Order/RoomList">馬上預定</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="~/Order/OrderList">查詢訂單</a>
+                            </li>
+                        </ul>
+                    </div>
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        <div>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Member" asp-action="SignIn">登入</a>
+                        </div>
+                        <div>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Member" asp-action="SignUp">註冊</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                @(User.Identity.Name.Split('@')[0]) <!--取得 小老鼠符號之前的部分-->
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#changePasswordModal">修改密碼</a>
+                                <a class="dropdown-item" asp-controller="Member" asp-action="SignOut">登出</a>
+                                <!-- 可以添加其他用戶相關的選單項目 -->
+                            </div>
+                        </div>
+                    }
+                    <!-- 修改密碼彈跳視窗 -->
+                    <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="changePasswordModalLabel">修改密碼</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form id="changePasswordForm">
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label for="currentPassword">目前密碼</label>
+                                            <input type="password" class="form-control" id="currentPassword" name="CurrentPassword" required>
+                                            <div class="invalid-feedback" id="currentPasswordError"></div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="newPassword">新密碼</label>
+                                            <input type="password" class="form-control" id="newPassword" name="NewPassword" required
+                                                   pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
+                                                   minlength="8">
+                                            <small class="form-text text-muted">密碼至少8個字元，包含至少一個字母和一個數字</small>
+                                            <div class="invalid-feedback" id="newPasswordError"></div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="confirmPassword">確認新密碼</label>
+                                            <input type="password" class="form-control" id="confirmPassword" name="ConfirmPassword" required>
+                                            <div class="invalid-feedback" id="confirmPasswordError"></div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                                        <button type="submit" class="btn btn-primary" id="changePasswordSubmit">確認變更</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <!-- End Header Section -->
+        <!-- Main Content -->
+        <main role="main">
+            @RenderBody()
+        </main>
+        <!-- End Main Content -->
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="container text-center">
+            <p>
+                &copy; <span id="displayYear"></span> 網頁來源
+                <a href="https://html.design/">飯店</a>
+            </p>
+        </div>
+    </footer>
+    <!-- End Footer Section -->
+    <!-- Scripts -->
+    <script src="~/js/jquery-3.4.1.min.js"></script>
+    <script src="~/js/bootstrap.js"></script>
+    <script src="~/js/slick.min.js"></script>
+    <script src="~/js/custom.js"></script>
+
+    <script> //改密碼使用的script
+        $(document).ready(function () {
+            $('#changePasswordForm').on('submit', function (e) {
+                e.preventDefault();
+
+                // 清除之前的錯誤
+                $('.is-invalid').removeClass('is-invalid');
+                $('.invalid-feedback').text('');
+
+                // 檢查密碼一致性
+                var newPassword = $('#newPassword').val();
+                var confirmPassword = $('#confirmPassword').val();
+
+                if (newPassword !== confirmPassword) {
+                    $('#confirmPassword').addClass('is-invalid');
+                    $('#confirmPasswordError').text('新密碼和確認密碼不相符');
+                    return;
+                }
+
+                $.ajax({
+                    url: '/api/Member/ChangePassword',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        CurrentPassword: $('#currentPassword').val(),
+                        NewPassword: newPassword,
+                        ConfirmPassword: confirmPassword
+                    }),
+                    success: function (response) {
+                        if (response.success) {
+                            // 成功提示
+                            alert(response.message);
+                            $('#changePasswordModal').modal('hide');
+                        }
+                    },
+                    error: function (xhr) {
+                        var response = xhr.responseJSON;
+
+                        if (response.errors) {
+                            // 處理模型驗證錯誤
+                            response.errors.forEach(function (error) {
+                                if (error.toLowerCase().includes('current')) {
+                                    $('#currentPassword').addClass('is-invalid');
+                                    $('#currentPasswordError').text(error);
+                                } else if (error.toLowerCase().includes('new')) {
+                                    $('#newPassword').addClass('is-invalid');
+                                    $('#newPasswordError').text(error);
+                                }
+                            });
+                        } else if (response.message) {
+                            // 處理伺服器返回的錯誤訊息
+                            alert(response.message);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
+    @RenderSection("Scripts", required: false) <!-- 為每個頁面預留腳本插槽 -->
+</body>
+
+</html>
