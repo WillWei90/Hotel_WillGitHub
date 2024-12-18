@@ -27,6 +27,9 @@ Debug/
 ~*
 *.log
 
-# 忽略自動生成的 AssemblyInfo
-**/AssemblyInfo.cs
+# 忽略整個 obj 目錄
+**/obj/
 
+# 忽略 AssemblyInfo 相關檔案
+**/AssemblyInfo.*
+**/RazorAssemblyInfo.*
