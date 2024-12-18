@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "xBs/rFy4YNs=",
+  "dgSpecHash": "WKgofCALyAg=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Swerxen\\Desktop\\HotelBookingSystem_Full(2024.12.16)修完正整版\\HotelBookingSystem(12.17will)\\HotelBookingSystem\\HotelBookingSystem.csproj",
+  "projectFilePath": "C:\\Users\\Swerxen\\Desktop\\gitAcerAcer\\HotelBookingSystem(12.17will)\\HotelBookingSystem\\HotelBookingSystem.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Swerxen\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\Swerxen\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

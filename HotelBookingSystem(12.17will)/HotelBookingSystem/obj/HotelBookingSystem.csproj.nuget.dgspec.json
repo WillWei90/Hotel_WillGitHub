@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Swerxen\\Desktop\\HotelBookingSystem_Full(2024.12.16)修完正整版\\HotelBookingSystem(12.17will)\\HotelBookingSystem\\HotelBookingSystem.csproj": {}
+    "C:\\Users\\Swerxen\\Desktop\\gitAcerAcer\\HotelBookingSystem(12.17will)\\HotelBookingSystem\\HotelBookingSystem.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Swerxen\\Desktop\\HotelBookingSystem_Full(2024.12.16)修完正整版\\HotelBookingSystem(12.17will)\\HotelBookingSystem\\HotelBookingSystem.csproj": {
+    "C:\\Users\\Swerxen\\Desktop\\gitAcerAcer\\HotelBookingSystem(12.17will)\\HotelBookingSystem\\HotelBookingSystem.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Swerxen\\Desktop\\HotelBookingSystem_Full(2024.12.16)修完正整版\\HotelBookingSystem(12.17will)\\HotelBookingSystem\\HotelBookingSystem.csproj",
+        "projectUniqueName": "C:\\Users\\Swerxen\\Desktop\\gitAcerAcer\\HotelBookingSystem(12.17will)\\HotelBookingSystem\\HotelBookingSystem.csproj",
         "projectName": "HotelBookingSystem",
-        "projectPath": "C:\\Users\\Swerxen\\Desktop\\HotelBookingSystem_Full(2024.12.16)修完正整版\\HotelBookingSystem(12.17will)\\HotelBookingSystem\\HotelBookingSystem.csproj",
+        "projectPath": "C:\\Users\\Swerxen\\Desktop\\gitAcerAcer\\HotelBookingSystem(12.17will)\\HotelBookingSystem\\HotelBookingSystem.csproj",
         "packagesPath": "C:\\Users\\Swerxen\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Swerxen\\Desktop\\HotelBookingSystem_Full(2024.12.16)修完正整版\\HotelBookingSystem(12.17will)\\HotelBookingSystem\\obj\\",
+        "outputPath": "C:\\Users\\Swerxen\\Desktop\\gitAcerAcer\\HotelBookingSystem(12.17will)\\HotelBookingSystem\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Swerxen\\AppData\\Roaming\\NuGet\\NuGet.Config",

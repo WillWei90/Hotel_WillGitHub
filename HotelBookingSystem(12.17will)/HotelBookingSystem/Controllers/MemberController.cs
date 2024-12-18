@@ -210,7 +210,7 @@ namespace HotelBookingSystem.Controllers
             {
                 Console.WriteLine(user.UserName);
                 Console.WriteLine("帳號可使用");
-                return Json("帳號可使用");
+                return Json("");
             }
 
         }
