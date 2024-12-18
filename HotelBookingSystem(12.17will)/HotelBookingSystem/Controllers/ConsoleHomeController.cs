@@ -99,7 +99,7 @@ namespace HotelBookingSystem.Controllers
 
             if (string.IsNullOrEmpty(userName))
             {
-                return Json(new { success = false, message = "User is not logged in." });
+                return Json(new { success = false, message = "用戶未登入。" });
             }
 
             string menuHtml = "";
@@ -131,7 +131,7 @@ namespace HotelBookingSystem.Controllers
         {
             if (!HttpContext.Session.TryGetValue("UserName", out byte[] userNameBytes))
             {
-                return Json(new { success = false, message = "User not logged in." });
+                return Json(new { success = false, message = "用戶未登入。" });
             }
 
             var userName = System.Text.Encoding.UTF8.GetString(userNameBytes);
@@ -139,17 +139,17 @@ namespace HotelBookingSystem.Controllers
 
             if (user == null)
             {
-                return Json(new { success = false, message = "User not found." });
+                return Json(new { success = false, message = "未找到用戶。" });
             }
 
             if (user.Password != PasswordHelper.HashPassword(CurrentPassword))
             {
-                return Json(new { success = false, message = "Current password is incorrect." });
+                return Json(new { success = false, message = "目前密碼不正確。" });
             }
 
             if (NewPassword != ConfirmPassword)
             {
-                return Json(new { success = false, message = "New password and confirmation do not match." });
+                return Json(new { success = false, message = "新密碼和確認密碼不符。" });
             }
 
             user.Password = PasswordHelper.HashPassword(NewPassword);

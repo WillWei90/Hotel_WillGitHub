@@ -7,7 +7,15 @@ wwwroot\css\slick-theme.css
 wwwroot\css\style.css
 wwwroot\css\style.css.map
 wwwroot\favicon.ico
+wwwroot\images\about-img.PNG
+wwwroot\images\f1.PNG
+wwwroot\images\f2.PNG
+wwwroot\images\f3.PNG
+wwwroot\images\facility-img.PNG
 wwwroot\images\hotel.jpg
+wwwroot\images\slider-img1.png
+wwwroot\images\slider-img2.png
+wwwroot\images\slider-img3.png
 wwwroot\js\bootstrap.js
 wwwroot\js\custom.js
 wwwroot\js\jquery-3.4.1.min.js
