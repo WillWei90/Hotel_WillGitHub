@@ -26,3 +26,7 @@ Debug/
 # 忽略其他暫存檔案
 ~*
 *.log
+
+# 忽略自動生成的 AssemblyInfo
+**/AssemblyInfo.cs
+
