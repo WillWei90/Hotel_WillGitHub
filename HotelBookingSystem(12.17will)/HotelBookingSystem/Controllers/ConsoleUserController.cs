@@ -70,22 +70,45 @@ namespace HotelBookingSystem.Controllers
         private string GeneratePasswordResetEmailBody(string userName, string newPassword)
         {
             return
-            $@"您好，{userName}：
+            $@"<html>
+    <body style='font-family: Arial, sans-serif; line-height: 1.6; color: #333;'>
+        <p>您好，{userName}：</p>
 
-            您的新密碼已經重置成功，請使用以下密碼登入系統：
+        <p>您的新密碼已經重置成功，請使用以下密碼登入系統：</p>
 
+        <p style='font-size: 18px; color: #ff4500; font-weight: bold;'>
             {newPassword}
+        </p>
 
-            為了保護您的帳號安全，請您登入後盡快修改密碼。
-            建議您將密碼設為一組包含大寫字母、小寫字母、數字及特殊符號的組合，
+        <p>
+            為了保護您的帳號安全，請您登入後盡快修改密碼。<br>
+            建議您將密碼設為包含大寫字母、小寫字母、數字及特殊符號的組合，
             並避免使用過於簡單的密碼。
+        </p>
 
+        <p>
+            您可以點擊以下連結登入系統：<br>
+            <a href='https://hotelconsole.lazzydog.store:9985/' 
+               style='color: #1a0dab; text-decoration: none; font-size: 16px;'>
+                點擊這裡登入系統
+            </a>
+        </p>
+
+        <p>
             若您並未申請密碼重置，請立即與系統管理員聯繫，避免帳號遭到未授權的使用。
+        </p>
 
+        <p>
             感謝您的使用，祝您順心！
+        </p>
 
-            系統管理團隊 敬上";
+        <p>系統管理團隊 敬上</p>
+    </body>
+    </html>";
         }
+
+
+
 
 
         [HttpPost]
@@ -296,7 +319,7 @@ namespace HotelBookingSystem.Controllers
                 From = new MailAddress("hotellazzydog@gmail.com"),
                 Subject = subject,
                 Body = body,
-                IsBodyHtml = false,
+                IsBodyHtml = true,
             };
             mailMessage.To.Add(toEmail);
 
