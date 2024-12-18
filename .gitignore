@@ -1,1 +1,28 @@
+# 忽略編譯後的輸出資料夾
+bin/
+obj/
+Release/
+Debug/
+
+# 忽略 Visual Studio 產生的檔案
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
 .vs/
+
+# 忽略組件輸出檔案
+*.dll
+*.exe
+*.pdb
+*.cache
+*.json
+*.ref*
+
+# 忽略備份檔案
+*.bak
+*.tmp
+
+# 忽略其他暫存檔案
+~*
+*.log

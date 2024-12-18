@@ -1,4 +1,5 @@
 ﻿using HotelBookingSystem.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Net.Mail; // 用于发送邮件
@@ -8,15 +9,26 @@ namespace HotelBookingSystem.Controllers
     public class ConsoleMemberController : Controller
     {
         private readonly HotelDbContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ConsoleMemberController(HotelDbContext context)
+        public ConsoleMemberController(HotelDbContext context,IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpGet]
         public IActionResult MemberManagement(string searchTerm)
         {
+            var session = _httpContextAccessor.HttpContext?.Session;
+            ViewBag.UserName = session?.GetString("UserName");
+
+            if (string.IsNullOrEmpty(ViewBag.UserName))
+            {
+                // 如果 Session 中沒有 UserName，重定向到登錄頁面
+                return RedirectToAction("Login", "ConsoleHome");
+            }
+
             // 僅加載會員數據，不加載訂單
             var members = _context.Members
                 .Where(m => string.IsNullOrEmpty(searchTerm) ||
