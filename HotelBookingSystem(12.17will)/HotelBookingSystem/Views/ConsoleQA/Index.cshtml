@@ -39,21 +39,15 @@
     document.addEventListener("DOMContentLoaded", function () {
         // 綁定 Tab 切換事件
         const tabs = document.querySelectorAll('[data-bs-toggle="tab"]');
-
         tabs.forEach(tab => {
             tab.addEventListener("shown.bs.tab", function (event) {
                 const targetTabId = event.target.getAttribute("data-bs-target").replace("#", "");
                 console.log(`Tab changed to: ${targetTabId}`);
-
-                // 重新綁定當前 Tab 的按鈕事件
-                const activeTabContent = document.getElementById(targetTabId);
-                if (activeTabContent) {
-                    bindReplyButtons(activeTabContent);
-                }
+                reloadTabContent(targetTabId); // 切換時重新加載內容
             });
         });
 
-        // 初次綁定全部 Tab 內容的按鈕事件
+        // 初次綁定所有 Tab 內容的按鈕事件
         bindReplyButtons(document);
     });
 
@@ -62,31 +56,28 @@
         buttons.forEach(button => {
             const qaNo = button.getAttribute("data-qano");
             const question = button.getAttribute("data-question");
-
             button.onclick = function () {
                 showReplyForm(qaNo, question);
             };
         });
     }
 
-     function showReplyForm(qaNo, question) {
+    function showReplyForm(qaNo, question) {
         console.log(`Attempting to show reply form for qaNo: ${qaNo}`);
-
-        // 獲取當前激活的分頁名稱
         const activeTab = document.querySelector('.tab-pane.active');
-        const tabName = activeTab.id.replace('qaTabContent-', ''); // e.g., 'all', 'solved', 'unsolved'
+        if (!activeTab) {
+            console.error("No active tab found!");
+            return;
+        }
 
-        // 查找當前分頁內的目標元素
-        const replyRow = activeTab.querySelector(`#reply-row-${tabName}-${qaNo}`);
-        const replyFormContainer = activeTab.querySelector(`#reply-form-${tabName}-${qaNo}`);
-
+        const replyRow = activeTab.querySelector(`#reply-row-${qaNo}`);
+        const replyFormContainer = activeTab.querySelector(`#reply-form-${qaNo}`);
         if (!replyRow || !replyFormContainer) {
-            console.error(`Element not found for qaNo: ${qaNo} in active tab (${tabName}).`);
+            console.error(`Element not found for qaNo: ${qaNo}`);
             alert("無法找到對應的元素，請檢查問題列表生成是否正確。");
             return;
         }
 
-        // 切換顯示/隱藏
         replyRow.style.display = replyRow.style.display === "none" ? "" : "none";
 
         if (replyFormContainer.innerHTML.trim() !== "") {
@@ -112,65 +103,46 @@
         `;
     }
 
-
-
     function submitReply(event, qaNo) {
-    event.preventDefault();
+        event.preventDefault();
+        const answer = document.getElementById(`answer-${qaNo}`).value;
+        const name = document.getElementById(`name-${qaNo}`).value;
 
-    const answer = document.getElementById(`answer-${qaNo}`).value;
-    const name = document.getElementById(`name-${qaNo}`).value;
+        console.log(`Submitting reply for qaNo: ${qaNo}`);
+        fetch(`/ConsoleQA/ReplyAjax`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ QaNo: qaNo, Answer: answer, Name: name })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert("回覆提交成功！");
+                reloadTabContent("all"); // 提交後刷新所有 Tab
+                reloadTabContent("solved");
+                reloadTabContent("unsolved");
+            } else {
+                alert("回覆提交失敗：" + data.message);
+            }
+        })
+        .catch(error => {
+            console.error("提交失敗：", error);
+            alert("提交失敗，請稍後再試！");
+        });
+    }
 
-    console.log(`Submitting reply for qaNo: ${qaNo}`);
-    console.log(`Answer: ${answer}`);
-    console.log(`Name: ${name}`);
-
-    fetch(`/ConsoleQA/ReplyAjax`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ QaNo: qaNo, Answer: answer, Name: name })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert("回覆提交成功！");
-
-            // 刷新當前 Tab
-            const activeTab = document.querySelector('.tab-pane.active');
-            const activeTabId = activeTab.id;
-            reloadTabContent(activeTabId);
-
-            // 同時刷新其他相關 Tab（例如 "全部" Tab）
-            reloadTabContent("all");
-        } else {
-            alert("回覆提交失敗：" + data.message);
-        }
-    })
-    .catch(error => {
-        console.error("提交失敗：", error);
-        alert("提交失敗，請稍後再試！");
-    });
-}
-
-
-
-        function reloadTabContent(tabId) {
+    function reloadTabContent(tabId) {
         fetch(`/ConsoleQA/GetTabContent?tab=${tabId}`)
             .then(response => response.text())
             .then(html => {
-                // 更新 Tab 的內容
                 document.getElementById(tabId).innerHTML = html;
-
-                // 重新綁定回覆按鈕事件
-                bindReplyButtons(document.getElementById(tabId));
+                bindReplyButtons(document.getElementById(tabId)); // 重新綁定按鈕事件
             })
             .catch(error => {
                 console.error(`Failed to reload tab content for ${tabId}:`, error);
                 alert("無法刷新當前頁面內容，請稍後再試！");
             });
     }
-
-
-
 </script>

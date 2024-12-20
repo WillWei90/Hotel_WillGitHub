@@ -27,9 +27,25 @@ namespace HotelBookingSystem.Controllers
                 // 如果 Session 中沒有 UserName，重定向到登錄頁面
                 return RedirectToAction("Login", "ConsoleHome");
             }
-            var qaList = _context.QAs.ToList(); // 獲取所有 QA 資料
-            return View(qaList); // 傳遞至 Index 視圖
+
+            var qaList = _context.QAs
+                .Select(q => new QA
+                {
+                    QaNo = q.QaNo,
+                    QuestionNo = q.QuestionNo ?? "未提供",
+                    Question = q.Question ?? "無內容",
+                    Answer = q.Answer ?? "無回答",
+                    Name = q.Name ?? "未知",
+                    CreateTime = q.CreateTime, // 非可空字段，直接賦值
+                    ReplyTime = q.ReplyTime ?? DateTime.MinValue, // 為空時設置默認值
+                    Solve = q.Solve
+                })
+                .ToList();
+
+
+            return View(qaList); // 傳遞查詢結果給視圖
         }
+
 
         // 回覆問題 - 一般回覆表單 (顯示特定問題的詳細資訊)
         public IActionResult Reply(string id)

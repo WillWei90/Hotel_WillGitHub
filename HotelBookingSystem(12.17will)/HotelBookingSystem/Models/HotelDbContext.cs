@@ -15,6 +15,7 @@ namespace HotelBookingSystem.Models
 
         //will新增
         public DbSet<MemberAccount> MemberAccounts { get; set; }
+        public DbSet<QA> QAs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

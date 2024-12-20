@@ -109,18 +109,22 @@ namespace HotelBookingSystem.Controllers
             <li class='nav-item'><a class='nav-link text-dark' href='/ConsoleMember/MemberManagement'>會員管理</a></li>
             <li class='nav-item'><a class='nav-link text-dark' href='/ConsoleOrder/OrderManagement'>訂單管理</a></li>
             <li class='nav-item'><a class='nav-link text-dark' href='/ConsoleRoom/Room'>客房管理</a></li>
+            <li class='nav-item'><a class='nav-link text-dark' href='/ConsoleQA/index'>客戶問題</a></li>
             <li class='nav-item'><a class='nav-link text-dark' href='/ConsoleUser/UserManagement'>使用者管理</a></li>";
             }
             else if (permissionFlag == "Product")
             {
                 menuHtml = @"
-            <li class='nav-item'><a class='nav-link text-dark' href='/ConsoleRoom/Room'>客房管理</a></li>";
+            <li class='nav-item'><a class='nav-link text-dark' href='/ConsoleRoom/Room'>客房管理</a></li>
+            <li class='nav-item'><a class='nav-link text-dark' href='/ConsoleQA/index'>客戶問題</a></li>";
+
             }
             else if (permissionFlag == "Customer")
             {
                 menuHtml = @"
             <li class='nav-item'><a class='nav-link text-dark' href='/ConsoleMember/MemberManagement'>會員管理</a></li>
-            <li class='nav-item'><a class='nav-link text-dark' href='/ConsoleOrder/OrderManagement'>訂單管理</a></li>";
+            <li class='nav-item'><a class='nav-link text-dark' href='/ConsoleOrder/OrderManagement'>訂單管理</a></li>
+            <li class='nav-item'><a class='nav-link text-dark' href='/ConsoleQA/index'>客戶問題</a></li>";
             }
 
             return Json(new { success = true, userName = userName, menuHtml = menuHtml });
