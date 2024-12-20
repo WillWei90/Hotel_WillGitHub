@@ -1,0 +1,127 @@
+is_global = true
+build_property.TargetFramework = net8.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = HotelBookingSystem
+build_property.RootNamespace = HotelBookingSystem
+build_property.ProjectDir = C:\Users\Swerxen\Desktop\gitAcerAcer\HotelBookingSystem(12.20ModifySignInView for ChangeMemberPasswordAndPhone)\HotelBookingSystem\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\Swerxen\Desktop\gitAcerAcer\HotelBookingSystem(12.20ModifySignInView for ChangeMemberPasswordAndPhone)\HotelBookingSystem
+build_property._RazorSourceGeneratorDebug = 
+
+[C:/Users/Swerxen/Desktop/gitAcerAcer/HotelBookingSystem(12.20ModifySignInView for ChangeMemberPasswordAndPhone)/HotelBookingSystem/Views/ConsoleHome/Home.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29uc29sZUhvbWVcSG9tZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Swerxen/Desktop/gitAcerAcer/HotelBookingSystem(12.20ModifySignInView for ChangeMemberPasswordAndPhone)/HotelBookingSystem/Views/ConsoleHome/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29uc29sZUhvbWVcTG9naW4uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Swerxen/Desktop/gitAcerAcer/HotelBookingSystem(12.20ModifySignInView for ChangeMemberPasswordAndPhone)/HotelBookingSystem/Views/ConsoleHome/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29uc29sZUhvbWVcUHJpdmFjeS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Swerxen/Desktop/gitAcerAcer/HotelBookingSystem(12.20ModifySignInView for ChangeMemberPasswordAndPhone)/HotelBookingSystem/Views/ConsoleMember/MemberManagement.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29uc29sZU1lbWJlclxNZW1iZXJNYW5hZ2VtZW50LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Swerxen/Desktop/gitAcerAcer/HotelBookingSystem(12.20ModifySignInView for ChangeMemberPasswordAndPhone)/HotelBookingSystem/Views/ConsoleOrder/OrderManagement.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29uc29sZU9yZGVyXE9yZGVyTWFuYWdlbWVudC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Swerxen/Desktop/gitAcerAcer/HotelBookingSystem(12.20ModifySignInView for ChangeMemberPasswordAndPhone)/HotelBookingSystem/Views/ConsoleRoom/Room.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29uc29sZVJvb21cUm9vbS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Swerxen/Desktop/gitAcerAcer/HotelBookingSystem(12.20ModifySignInView for ChangeMemberPasswordAndPhone)/HotelBookingSystem/Views/ConsoleUser/UserManagement.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29uc29sZVVzZXJcVXNlck1hbmFnZW1lbnQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Swerxen/Desktop/gitAcerAcer/HotelBookingSystem(12.20ModifySignInView for ChangeMemberPasswordAndPhone)/HotelBookingSystem/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Swerxen/Desktop/gitAcerAcer/HotelBookingSystem(12.20ModifySignInView for ChangeMemberPasswordAndPhone)/HotelBookingSystem/Views/Home/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Swerxen/Desktop/gitAcerAcer/HotelBookingSystem(12.20ModifySignInView for ChangeMemberPasswordAndPhone)/HotelBookingSystem/Views/Member/About.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYmVyXEFib3V0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Swerxen/Desktop/gitAcerAcer/HotelBookingSystem(12.20ModifySignInView for ChangeMemberPasswordAndPhone)/HotelBookingSystem/Views/Member/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYmVyXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Swerxen/Desktop/gitAcerAcer/HotelBookingSystem(12.20ModifySignInView for ChangeMemberPasswordAndPhone)/HotelBookingSystem/Views/Member/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYmVyXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Swerxen/Desktop/gitAcerAcer/HotelBookingSystem(12.20ModifySignInView for ChangeMemberPasswordAndPhone)/HotelBookingSystem/Views/Member/IndexAuthorized.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYmVyXEluZGV4QXV0aG9yaXplZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Swerxen/Desktop/gitAcerAcer/HotelBookingSystem(12.20ModifySignInView for ChangeMemberPasswordAndPhone)/HotelBookingSystem/Views/Member/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYmVyXFByaXZhY3kuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Swerxen/Desktop/gitAcerAcer/HotelBookingSystem(12.20ModifySignInView for ChangeMemberPasswordAndPhone)/HotelBookingSystem/Views/Member/ShowMemberAccount.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYmVyXFNob3dNZW1iZXJBY2NvdW50LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Swerxen/Desktop/gitAcerAcer/HotelBookingSystem(12.20ModifySignInView for ChangeMemberPasswordAndPhone)/HotelBookingSystem/Views/Member/SignIn.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYmVyXFNpZ25Jbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Swerxen/Desktop/gitAcerAcer/HotelBookingSystem(12.20ModifySignInView for ChangeMemberPasswordAndPhone)/HotelBookingSystem/Views/Member/SignUp.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYmVyXFNpZ25VcC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Swerxen/Desktop/gitAcerAcer/HotelBookingSystem(12.20ModifySignInView for ChangeMemberPasswordAndPhone)/HotelBookingSystem/Views/Order/OrderDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJcT3JkZXJEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Swerxen/Desktop/gitAcerAcer/HotelBookingSystem(12.20ModifySignInView for ChangeMemberPasswordAndPhone)/HotelBookingSystem/Views/Order/OrderList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJcT3JkZXJMaXN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Swerxen/Desktop/gitAcerAcer/HotelBookingSystem(12.20ModifySignInView for ChangeMemberPasswordAndPhone)/HotelBookingSystem/Views/Order/ReserveRoomForm.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJcUmVzZXJ2ZVJvb21Gb3JtLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Swerxen/Desktop/gitAcerAcer/HotelBookingSystem(12.20ModifySignInView for ChangeMemberPasswordAndPhone)/HotelBookingSystem/Views/Order/RoomList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJcUm9vbUxpc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Swerxen/Desktop/gitAcerAcer/HotelBookingSystem(12.20ModifySignInView for ChangeMemberPasswordAndPhone)/HotelBookingSystem/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Swerxen/Desktop/gitAcerAcer/HotelBookingSystem(12.20ModifySignInView for ChangeMemberPasswordAndPhone)/HotelBookingSystem/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Swerxen/Desktop/gitAcerAcer/HotelBookingSystem(12.20ModifySignInView for ChangeMemberPasswordAndPhone)/HotelBookingSystem/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Swerxen/Desktop/gitAcerAcer/HotelBookingSystem(12.20ModifySignInView for ChangeMemberPasswordAndPhone)/HotelBookingSystem/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Swerxen/Desktop/gitAcerAcer/HotelBookingSystem(12.20ModifySignInView for ChangeMemberPasswordAndPhone)/HotelBookingSystem/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-iayztpipri
+
+[C:/Users/Swerxen/Desktop/gitAcerAcer/HotelBookingSystem(12.20ModifySignInView for ChangeMemberPasswordAndPhone)/HotelBookingSystem/Views/Shared/_LayoutConsole.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXRDb25zb2xlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = b-vw6ut48luw
