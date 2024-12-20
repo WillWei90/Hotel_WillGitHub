@@ -1,148 +1,162 @@
-﻿@model IEnumerable<HotelBookingSystem.Models.QA>
+﻿@model PagedList.Core.IPagedList<HotelBookingSystem.Models.QA>
 
 @{
-    Layout = "~/Views/Shared/_LayoutConsole.cshtml"; // 使用 _LayoutConsole.cshtml 作為布局
+    Layout = "~/Views/Shared/_LayoutConsole.cshtml";
     ViewData["Title"] = "問題列表";
 }
 
 <h1>問題列表</h1>
 
+@if (!string.IsNullOrEmpty(ViewBag.UserName))
+{
+    <p>您好，@ViewBag.UserName！</p>
+}
+else
+{
+    <p>您尚未登錄。</p>
+}
+
 <!-- Tabs -->
-<ul class="nav nav-tabs" id="qaTabs" role="tablist">
+<ul class="nav nav-tabs mb-3">
     <li class="nav-item">
-        <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true">全部</button>
+        <a class="nav-link @(ViewBag.CurrentTab == "all" ? "active" : "")" href="@Url.Action("Index", new { tab = "all" })">全部</a>
     </li>
     <li class="nav-item">
-        <button class="nav-link" id="solved-tab" data-bs-toggle="tab" data-bs-target="#solved" type="button" role="tab" aria-controls="solved" aria-selected="false">已解決</button>
+        <a class="nav-link @(ViewBag.CurrentTab == "solved" ? "active" : "")" href="@Url.Action("Index", new { tab = "solved" })">已解決</a>
     </li>
     <li class="nav-item">
-        <button class="nav-link" id="unsolved-tab" data-bs-toggle="tab" data-bs-target="#unsolved" type="button" role="tab" aria-controls="unsolved" aria-selected="false">未解決</button>
+        <a class="nav-link @(ViewBag.CurrentTab == "unsolved" ? "active" : "")" href="@Url.Action("Index", new { tab = "unsolved" })">未解決</a>
     </li>
 </ul>
 
-<!-- Tab Content -->
-<div class="tab-content" id="qaTabContent">
-    <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
-        @Html.Partial("_QAList", Model, new ViewDataDictionary(ViewData) { { "Tab", "all" } })
-    </div>
+<!-- 問題列表 -->
+@Html.Partial("_QAList", Model)
 
-    <div class="tab-pane fade" id="solved" role="tabpanel" aria-labelledby="solved-tab">
-        @Html.Partial("_QAList", Model.Where(qa => qa.Solve), new ViewDataDictionary(ViewData) { { "Tab", "solved" } })
-    </div>
+<!-- 分頁按鈕 -->
+<div class="d-flex justify-content-center mt-3">
+    <ul class="pagination">
+        @if (Model.HasPreviousPage)
+        {
+            <li class="page-item">
+                <a class="page-link" href="@Url.Action("Index", new { tab = ViewBag.CurrentTab, page = Model.PageNumber - 1 })">上一頁</a>
+            </li>
+        }
 
-    <div class="tab-pane fade" id="unsolved" role="tabpanel" aria-labelledby="unsolved-tab">
-        @Html.Partial("_QAList", Model.Where(qa => !qa.Solve), new ViewDataDictionary(ViewData) { { "Tab", "unsolved" } })
-    </div>
+        @for (int i = 1; i <= Model.PageCount; i++)
+        {
+            <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                <a class="page-link" href="@Url.Action("Index", new { tab = ViewBag.CurrentTab, page = i })">@i</a>
+            </li>
+        }
+
+        @if (Model.HasNextPage)
+        {
+            <li class="page-item">
+                <a class="page-link" href="@Url.Action("Index", new { tab = ViewBag.CurrentTab, page = Model.PageNumber + 1 })">下一頁</a>
+            </li>
+        }
+    </ul>
 </div>
 
+
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // 綁定 Tab 切換事件
-        const tabs = document.querySelectorAll('[data-bs-toggle="tab"]');
-        tabs.forEach(tab => {
-            tab.addEventListener("shown.bs.tab", function (event) {
-                const targetTabId = event.target.getAttribute("data-bs-target").replace("#", "");
-                console.log(`Tab changed to: ${targetTabId}`);
-                reloadTabContent(targetTabId); // 切換時重新加載內容
-            });
-        });
+    // 展開/收起已回覆內容
+    function toggleReplyContent(qaNo) {
+        const content = document.getElementById(`content-${qaNo}`);
+        const button = event.target.closest(".expand-button");
 
-        // 初次綁定所有 Tab 內容的按鈕事件
-        bindReplyButtons(document);
-    });
-
-    function bindReplyButtons(scope) {
-        const buttons = scope.querySelectorAll("button[data-qano]");
-        buttons.forEach(button => {
-            const qaNo = button.getAttribute("data-qano");
-            const question = button.getAttribute("data-question");
-            button.onclick = function () {
-                showReplyForm(qaNo, question);
-            };
-        });
+        if (content.style.display === "none" || !content.style.display) {
+            content.style.display = "block"; // 展開
+            button.classList.add("expanded");
+        } else {
+            content.style.display = "none"; // 收起
+            button.classList.remove("expanded");
+        }
     }
 
-    function showReplyForm(qaNo, question) {
-        console.log(`Attempting to show reply form for qaNo: ${qaNo}`);
-        const activeTab = document.querySelector('.tab-pane.active');
-        if (!activeTab) {
-            console.error("No active tab found!");
-            return;
-        }
-
-        const replyRow = activeTab.querySelector(`#reply-row-${qaNo}`);
-        const replyFormContainer = activeTab.querySelector(`#reply-form-${qaNo}`);
-        if (!replyRow || !replyFormContainer) {
-            console.error(`Element not found for qaNo: ${qaNo}`);
-            alert("無法找到對應的元素，請檢查問題列表生成是否正確。");
-            return;
-        }
-
-        replyRow.style.display = replyRow.style.display === "none" ? "" : "none";
-
-        if (replyFormContainer.innerHTML.trim() !== "") {
-            console.log("Reply form already generated.");
-            return;
-        }
-
-        replyFormContainer.innerHTML = `
-            <div>
-                <p><strong>問題內容:</strong> ${question}</p>
-                <form onsubmit="submitReply(event, '${qaNo}')">
-                    <div class="form-group">
-                        <label for="answer-${qaNo}">回答內容</label>
-                        <textarea id="answer-${qaNo}" class="form-control" rows="3" required></textarea>
+    // 顯示回覆表單
+    function showReplyForm(qaNo, userName) {
+        const modalHtml = `
+            <div class="modal" id="replyModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">回覆問題</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="replyForm">
+                                <div class="form-group">
+                                    <label for="answer-${qaNo}">回答內容</label>
+                                    <textarea id="answer-${qaNo}" class="form-control" rows="3" required></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                            <button type="button" class="btn btn-primary" onclick="submitReply('${qaNo}', '${userName}')">提交</button>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="name-${qaNo}">回答人</label>
-                        <input id="name-${qaNo}" class="form-control" required />
-                    </div>
-                    <button type="submit" class="btn btn-success btn-sm">提交回覆</button>
-                </form>
+                </div>
             </div>
         `;
+
+        document.body.insertAdjacentHTML("beforeend", modalHtml);
+        const modal = new bootstrap.Modal(document.getElementById("replyModal"));
+        modal.show();
+
+        // 清除模態框時刪除 DOM
+        document.getElementById("replyModal").addEventListener("hidden.bs.modal", function () {
+            this.remove();
+        });
     }
 
-    function submitReply(event, qaNo) {
-        event.preventDefault();
+    // 提交回覆
+    function submitReply(qaNo, userName) {
         const answer = document.getElementById(`answer-${qaNo}`).value;
-        const name = document.getElementById(`name-${qaNo}`).value;
 
-        console.log(`Submitting reply for qaNo: ${qaNo}`);
-        fetch(`/ConsoleQA/ReplyAjax`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ QaNo: qaNo, Answer: answer, Name: name })
+        fetch('/ConsoleQA/ReplyAjax', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ QaNo: qaNo, Answer: answer, Name: userName })
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert("回覆提交成功！");
-                reloadTabContent("all"); // 提交後刷新所有 Tab
-                reloadTabContent("solved");
-                reloadTabContent("unsolved");
+                alert("回覆成功！");
+                location.reload(); // 重新加載頁面
             } else {
-                alert("回覆提交失敗：" + data.message);
+                alert("回覆失敗：" + data.message);
             }
         })
-        .catch(error => {
-            console.error("提交失敗：", error);
-            alert("提交失敗，請稍後再試！");
-        });
-    }
-
-    function reloadTabContent(tabId) {
-        fetch(`/ConsoleQA/GetTabContent?tab=${tabId}`)
-            .then(response => response.text())
-            .then(html => {
-                document.getElementById(tabId).innerHTML = html;
-                bindReplyButtons(document.getElementById(tabId)); // 重新綁定按鈕事件
-            })
-            .catch(error => {
-                console.error(`Failed to reload tab content for ${tabId}:`, error);
-                alert("無法刷新當前頁面內容，請稍後再試！");
-            });
+        .catch(error => console.error("回覆失敗：", error));
     }
 </script>
+
+
+<style>
+    .expandable-content {
+        margin-top: 10px;
+        padding: 10px;
+        border-left: 3px solid #007bff;
+        background-color: #f9f9f9;
+        font-size: 14px;
+    }
+
+    .question-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .toggle-button {
+        font-size: 12px;
+        color: #007bff;
+        border: none;
+        background: none;
+        cursor: pointer;
+    }
+
+        .toggle-button:hover {
+            text-decoration: underline;
+        }
+</style>

@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using HotelBookingSystem.Models;
+using PagedList.Core; // 如果是 ASP.NET Core
 
 namespace HotelBookingSystem.Controllers
 {
@@ -17,34 +18,60 @@ namespace HotelBookingSystem.Controllers
         }
 
         // 顯示所有 QA 問題列表
-        public IActionResult Index()
+        public IActionResult Index(string tab = "all", int? page = 1)
         {
             var session = _httpContextAccessor.HttpContext?.Session;
             ViewBag.UserName = session?.GetString("UserName");
 
             if (string.IsNullOrEmpty(ViewBag.UserName))
             {
-                // 如果 Session 中沒有 UserName，重定向到登錄頁面
                 return RedirectToAction("Login", "ConsoleHome");
             }
 
-            var qaList = _context.QAs
+            IQueryable<QA> query;
+
+            // 根據 tab 過濾數據
+            switch (tab.ToLower())
+            {
+                case "solved":
+                    query = _context.QAs.Where(q => q.Solve);
+                    break;
+                case "unsolved":
+                    query = _context.QAs.Where(q => !q.Solve);
+                    break;
+                case "all":
+                default:
+                    query = _context.QAs;
+                    break;
+            }
+
+            // 排序與查詢數據
+            var qaList = query
+                .OrderByDescending(q => q.CreateTime) // 按創建時間降序排列
                 .Select(q => new QA
                 {
                     QaNo = q.QaNo,
-                    QuestionNo = q.QuestionNo ?? "未提供",
+                    CreateTime = q.CreateTime, // 加入創建時間
                     Question = q.Question ?? "無內容",
-                    Answer = q.Answer ?? "無回答",
+                    Answer = q.Answer ?? "尚未回覆",
                     Name = q.Name ?? "未知",
-                    CreateTime = q.CreateTime, // 非可空字段，直接賦值
-                    ReplyTime = q.ReplyTime ?? DateTime.MinValue, // 為空時設置默認值
                     Solve = q.Solve
-                })
-                .ToList();
+                    
+                });
 
+            // 分頁邏輯
+            int pageSize = 10;
+            int pageNumber = page ?? 1;
 
-            return View(qaList); // 傳遞查詢結果給視圖
+            var pagedList = qaList.ToPagedList(pageNumber, pageSize);
+
+            ViewBag.CurrentTab = tab;
+            return View(pagedList);
         }
+
+
+
+
 
 
         // 回覆問題 - 一般回覆表單 (顯示特定問題的詳細資訊)
@@ -116,8 +143,10 @@ namespace HotelBookingSystem.Controllers
                 return Json(new { success = false, message = "找不到該問題。" });
             }
 
+            // 更新回覆
+            var userName = _httpContextAccessor.HttpContext?.Session?.GetString("UserName") ?? "匿名";
             qa.Answer = reply.Answer;
-            qa.Name = reply.Name;
+            qa.Name = userName;
             qa.ReplyTime = DateTime.Now;
             qa.Solve = true;
 
@@ -131,6 +160,8 @@ namespace HotelBookingSystem.Controllers
                 replyTime = qa.ReplyTime?.ToString("yyyy-MM-dd HH:mm")
             });
         }
+
+
 
         [HttpGet]
         public IActionResult GetTabContent(string tab)
