@@ -83,6 +83,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="~/Order/OrderList">查詢訂單</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("Cart", "Order")">購物車</a>
+                            </li>
                         </ul>
                     </div>
                     @if (!User.Identity.IsAuthenticated)
@@ -102,6 +105,7 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="userDropdown">
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#changePasswordModal">修改密碼</a>
+                                <a class="dropdown-item" href="~/Order/OrderList">查詢訂單</a>
                                 <a class="dropdown-item" asp-controller="Member" asp-action="SignOut">登出</a>
                                 <!-- 可以添加其他用戶相關的選單項目 -->
                             </div>
