@@ -92,6 +92,21 @@
                 <span asp-validation-for="Phone" class="text-danger"></span>
             </div>
         </div>
+
+        <div class="form-group row">
+            <label for="inputBirthday" class="col-sm-2">生日</label>
+            <div class="col-sm-10">
+                <input type="date"
+                       id="inputBirthday"
+                       name="Birthday"
+                       class="form-control"
+                       max="@DateTime.Today.AddYears(-20).ToString("yyyy-MM-dd")"
+                       value="@(ViewData["ValidBirthday"] ?? "")" />
+                <span asp-validation-for="Birthday" class="text-danger"></span>
+                <small class="form-text text-muted">必須年滿20歲才能註冊</small>
+            </div>
+        </div>
+
         <div class="form-group">
             <button type="submit" id="bt2" class="btn-submit">註冊</button>
         </div>
@@ -99,11 +114,10 @@
 </div>
 
 <!--@@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
 }-->
-
 @section scripts {
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script>
@@ -111,7 +125,7 @@
         //根據 AJAX 返回的結果, 會更新 #userNameStatus 元素的文字內容:
         $("#inputUserName").on("input", function () {
             var userName = $(this).val();
-            console.log("haha",userName);
+            console.log("haha", userName);
             $.ajax({
                 type: "POST",
                 url: "/Member/OnSubmit",
@@ -148,6 +162,5 @@
             });
         });
     </script>
-    
-}
 
+}
