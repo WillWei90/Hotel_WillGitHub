@@ -1,0 +1,39 @@
+﻿@model IEnumerable<HotelBookingSystem.Models.QA>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>流水號</th>
+            <th>問題內容</th>
+            <th>回答</th>
+            <th>回覆人</th>
+            <th>狀態</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var qa in Model)
+        {
+            <tr id="qa-row-@ViewData["Tab"]-@qa.QaNo">
+                <td>@qa.QaNo</td>
+                <td>@qa.Question</td>
+                <td>@(string.IsNullOrEmpty(qa.Answer) ? "尚未回覆" : qa.Answer)</td>
+                <td>@(string.IsNullOrEmpty(qa.Name) ? "無回覆" : qa.Name)</td>
+                <td>@(qa.Solve ? "已解決" : "未解決")</td>
+                <td>
+                    <button class="btn btn-primary btn-sm"
+                            data-qano="@qa.QaNo"
+                            data-question="@qa.Question"
+                            data-tab="@ViewData["Tab"]">
+                        回覆
+                    </button>
+                </td>
+            </tr>
+            <tr id="reply-row-@ViewData["Tab"]-@qa.QaNo" style="display:none;">
+                <td colspan="6">
+                    <div id="reply-form-@ViewData["Tab"]-@qa.QaNo"></div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
