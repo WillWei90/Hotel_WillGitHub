@@ -70,8 +70,7 @@
               "RelativeToolTip": "HotelBookingSystem\\Views\\Order\\RoomList.cshtml",
               "ViewState": "AgIAAA8AAAAAAAAAAAAAACcAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-12-20T23:17:36.717Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-20T23:17:36.717Z"
             },
             {
               "$type": "Document",
@@ -81,10 +80,9 @@
               "RelativeDocumentMoniker": "HotelBookingSystem\\Views\\Order\\ReserveRoomForm.cshtml",
               "ToolTip": "C:\\Users\\p1997\\Hotel_WillGitHub\\HotelBookingSystem(12.17will)\\HotelBookingSystem\\Views\\Order\\ReserveRoomForm.cshtml",
               "RelativeToolTip": "HotelBookingSystem\\Views\\Order\\ReserveRoomForm.cshtml",
-              "ViewState": "AgIAADwAAAAAAAAAAAAAAEkAAABDAAAAAAAAAA==",
+              "ViewState": "AgIAADwAAAAAAAAAAAAAAEYAAABEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-12-20T23:17:09.6Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-20T23:17:09.6Z"
             },
             {
               "$type": "Document",
@@ -94,7 +92,7 @@
               "RelativeDocumentMoniker": "HotelBookingSystem\\Views\\Shared\\_Layout.cshtml",
               "ToolTip": "C:\\Users\\p1997\\Hotel_WillGitHub\\HotelBookingSystem(12.17will)\\HotelBookingSystem\\Views\\Shared\\_Layout.cshtml",
               "RelativeToolTip": "HotelBookingSystem\\Views\\Shared\\_Layout.cshtml",
-              "ViewState": "AgIAAEoAAAAAAAAAAAAmwF0AAAA4AAAAAAAAAA==",
+              "ViewState": "AgIAACEAAAAAAAAAAAAAADAAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2024-12-20T06:15:02.257Z",
               "EditorCaption": ""
@@ -107,10 +105,9 @@
               "RelativeDocumentMoniker": "HotelBookingSystem\\Views\\Order\\Cart.cshtml",
               "ToolTip": "C:\\Users\\p1997\\Hotel_WillGitHub\\HotelBookingSystem(12.17will)\\HotelBookingSystem\\Views\\Order\\Cart.cshtml",
               "RelativeToolTip": "HotelBookingSystem\\Views\\Order\\Cart.cshtml",
-              "ViewState": "AgIAACcAAAAAAAAAAAAAADsAAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAACcAAAAAAAAAAAAAADcAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-12-20T06:13:17.255Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-20T06:13:17.255Z"
             },
             {
               "$type": "Document",
@@ -122,8 +119,7 @@
               "RelativeToolTip": "HotelBookingSystem\\Views\\Order\\OrderDetails.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAABFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-12-19T10:16:59.325Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-19T10:16:59.325Z"
             },
             {
               "$type": "Document",
@@ -135,8 +131,7 @@
               "RelativeToolTip": "HotelBookingSystem\\Models\\Room.cs",
               "ViewState": "AgIAABEAAAAAAAAAAAAcwA0AAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-20T22:20:21.615Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-20T22:20:21.615Z"
             },
             {
               "$type": "Document",
@@ -148,8 +143,7 @@
               "RelativeToolTip": "HotelBookingSystem\\Models\\Order.cs",
               "ViewState": "AgIAAAgAAAAAAAAAAAAiwCIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-19T10:40:27.935Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-19T10:40:27.935Z"
             },
             {
               "$type": "Document",
@@ -159,10 +153,9 @@
               "RelativeDocumentMoniker": "HotelBookingSystem\\Controllers\\OrderController.cs",
               "ToolTip": "C:\\Users\\p1997\\Hotel_WillGitHub\\HotelBookingSystem(12.17will)\\HotelBookingSystem\\Controllers\\OrderController.cs",
               "RelativeToolTip": "HotelBookingSystem\\Controllers\\OrderController.cs",
-              "ViewState": "AgIAAIkBAAAAAAAAAAAwwJgBAAAfAAAAAAAAAA==",
+              "ViewState": "AgIAAGIBAAAAAAAAAAAwwHEBAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-19T01:25:02.759Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-19T01:25:02.759Z"
             },
             {
               "$type": "Document",
@@ -174,8 +167,7 @@
               "RelativeToolTip": "HotelBookingSystem\\Views\\Order\\OrderList.cshtml",
               "ViewState": "AgIAAB4AAAAAAAAAAAAAACYAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-12-19T02:11:34.263Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-19T02:11:34.263Z"
             },
             {
               "$type": "Document",
