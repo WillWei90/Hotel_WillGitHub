@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Swerxen\\Desktop\\gitAcerAcer\\HotelBookingSystem(12.19ChangeMemberPasswordAndPhone)\\HotelBookingSystem\\HotelBookingSystem.csproj": {}
+    "C:\\Users\\Swerxen\\Desktop\\gitAcerAcer\\HotelBookingSystem(12.20ModifyAboutView)\\HotelBookingSystem\\HotelBookingSystem.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Swerxen\\Desktop\\gitAcerAcer\\HotelBookingSystem(12.19ChangeMemberPasswordAndPhone)\\HotelBookingSystem\\HotelBookingSystem.csproj": {
+    "C:\\Users\\Swerxen\\Desktop\\gitAcerAcer\\HotelBookingSystem(12.20ModifyAboutView)\\HotelBookingSystem\\HotelBookingSystem.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Swerxen\\Desktop\\gitAcerAcer\\HotelBookingSystem(12.19ChangeMemberPasswordAndPhone)\\HotelBookingSystem\\HotelBookingSystem.csproj",
+        "projectUniqueName": "C:\\Users\\Swerxen\\Desktop\\gitAcerAcer\\HotelBookingSystem(12.20ModifyAboutView)\\HotelBookingSystem\\HotelBookingSystem.csproj",
         "projectName": "HotelBookingSystem",
-        "projectPath": "C:\\Users\\Swerxen\\Desktop\\gitAcerAcer\\HotelBookingSystem(12.19ChangeMemberPasswordAndPhone)\\HotelBookingSystem\\HotelBookingSystem.csproj",
+        "projectPath": "C:\\Users\\Swerxen\\Desktop\\gitAcerAcer\\HotelBookingSystem(12.20ModifyAboutView)\\HotelBookingSystem\\HotelBookingSystem.csproj",
         "packagesPath": "C:\\Users\\Swerxen\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Swerxen\\Desktop\\gitAcerAcer\\HotelBookingSystem(12.19ChangeMemberPasswordAndPhone)\\HotelBookingSystem\\obj\\",
+        "outputPath": "C:\\Users\\Swerxen\\Desktop\\gitAcerAcer\\HotelBookingSystem(12.20ModifyAboutView)\\HotelBookingSystem\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Swerxen\\AppData\\Roaming\\NuGet\\NuGet.Config",

@@ -128,6 +128,11 @@
 
             if (params.has('forceSignOut')) {
                 $('#signInAlert').modal('show');
+
+                // 綁定按鈕的關閉事件，確保可以正常關閉模態框
+                $('#signInAlert .btn-primary, #signInAlert .close').on('click', function () {
+                    $('#signInAlert').modal('hide');
+                });
             }
         });
     </script>

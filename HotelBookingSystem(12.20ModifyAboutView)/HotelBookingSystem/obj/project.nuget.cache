@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "6vNYAciGZPQ=",
+  "dgSpecHash": "6L+Dd+CdF0A=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Swerxen\\Desktop\\gitAcerAcer\\HotelBookingSystem(12.19ChangeMemberPasswordAndPhone)\\HotelBookingSystem\\HotelBookingSystem.csproj",
+  "projectFilePath": "C:\\Users\\Swerxen\\Desktop\\gitAcerAcer\\HotelBookingSystem(12.20ModifyAboutView)\\HotelBookingSystem\\HotelBookingSystem.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Swerxen\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\Swerxen\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
