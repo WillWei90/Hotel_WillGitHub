@@ -20,6 +20,7 @@ namespace HotelBookingSystem.Models
         public int? ExtraServicenNo { get; set; }
         public bool IsPay { get; set; }
         public bool Cancel { get; set; }
+        public decimal TotalAmount { get; set; }
 
         // 新增屬性：房間名稱
         [NotMapped] // 此屬性不會被映射到資料庫

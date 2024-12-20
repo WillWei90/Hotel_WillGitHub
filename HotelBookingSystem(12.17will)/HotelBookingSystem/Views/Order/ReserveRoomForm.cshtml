@@ -7,37 +7,101 @@
 
 <div class="container mt-5">
     <h2 class="text-center mb-4">預訂房間</h2>
-    <form asp-action="ReserveRoom" method="post">
-        <div class="card shadow p-4">
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label for="RoomNo" class="form-label">房間編號</label>
-                    <input type="text" class="form-control" id="RoomNo" name="RoomNo" value="@Model.RoomNo" readonly />
-                </div>
-                <div class="col-md-6">
-                    <label for="RoomName" class="form-label">房間名稱</label>
-                    <input type="text" class="form-control" id="RoomName" name="RoomName" value="@Model.RoomName" readonly />
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label for="Price" class="form-label">價格</label>
-                    <input type="text" class="form-control" id="Price" name="Price" value="@Model.Price" readonly />
-                </div>
-                <div class="col-md-6">
-                    <label for="StartDate" class="form-label">入住日期</label>
-                    <input type="date" class="form-control" id="StartDate" name="StartDate" value="@Model.StartDate.ToString("yyyy-MM-dd")" required />
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label for="EndDate" class="form-label">退房日期</label>
-                    <input type="date" class="form-control" id="EndDate" name="EndDate" value="@Model.EndDate.ToString("yyyy-MM-dd")" required />
-                </div>
-            </div>
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary">確認預訂</button>
-            </div>
+    <div class="alert alert-info text-center mt-3">
+        <strong>提示：</strong>目前只開放預訂三個月內的日期，超出此範圍的日期無法選擇。
+    </div>
+
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <div class="alert alert-warning text-center">
+            您需要先登入才能預訂房間。
+            <a href="@Url.Action("SignIn", "Member")" class="btn btn-primary">登入</a>
         </div>
-    </form>
+    }
+    else
+    {
+        <form asp-action="ReserveRoom" asp-controller="Order" method="post" id="reserveRoomForm">
+            <div class="card shadow p-4">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="RoomNo" class="form-label">房間編號</label>
+                        <input type="text" class="form-control" id="RoomNo" name="RoomNo" value="@Model.RoomNo" readonly />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="RoomName" class="form-label">房間名稱</label>
+                        <input type="text" class="form-control" id="RoomName" name="RoomName" value="@Model.RoomName" readonly />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="Price" class="form-label">價格</label>
+                        <input type="text" class="form-control" id="Price" name="Price" value="@Model.Price" readonly />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="StartDate" class="form-label">入住日期</label>
+                        <input type="date" class="form-control" id="StartDate" name="StartDate"
+                               value="@DateTime.Now.ToString("yyyy-MM-dd")"
+                               min="@DateTime.Now.ToString("yyyy-MM-dd")"
+                               max="@DateTime.Now.AddMonths(3).ToString("yyyy-MM-dd")" required />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="EndDate" class="form-label">退房日期</label>
+                        <input type="date" class="form-control" id="EndDate" name="EndDate"
+                               value="@DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")"
+                               min="@DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")"
+                               required />
+                    </div>
+                </div>
+                <div class="text-danger" id="error-message" style="display: none;"></div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary" id="submit-button">確認預訂</button>
+                </div>
+            </div>
+        </form>
+    }
 </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // 動態調整退房日期邏輯
+            const startDateInput = document.getElementById("StartDate");
+            const endDateInput = document.getElementById("EndDate");
+
+            if (startDateInput && endDateInput) {
+                startDateInput.addEventListener("change", function () {
+                    const startDate = new Date(this.value);
+                    const minEndDate = new Date(startDate);
+                    minEndDate.setDate(minEndDate.getDate() + 1); // 至少住一天
+
+                    endDateInput.min = minEndDate.toISOString().split("T")[0];
+
+                    const currentEndDate = new Date(endDateInput.value);
+                    if (currentEndDate < minEndDate) {
+                        endDateInput.value = minEndDate.toISOString().split("T")[0];
+                    }
+                });
+            }
+
+            // 表單提交時添加加載狀態
+            const reserveForm = document.getElementById("reserveRoomForm");
+            const submitButton = document.getElementById("submit-button");
+
+            if (reserveForm && submitButton) {
+                reserveForm.addEventListener("submit", function () {
+                    submitButton.disabled = true;
+                    submitButton.textContent = "提交中...";
+                });
+            }
+
+            // 檢查用戶是否已登入
+            const isAuthenticated = @((User.Identity.IsAuthenticated).ToString().ToLower());
+            if (!isAuthenticated && submitButton) {
+                submitButton.disabled = true;
+                submitButton.textContent = "請先登入";
+            }
+        });
+    </script>
+}
