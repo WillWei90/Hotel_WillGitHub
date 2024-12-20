@@ -1,0 +1,148 @@
+﻿@model IEnumerable<HotelBookingSystem.Models.QA>
+
+@{
+    Layout = "~/Views/Shared/_LayoutConsole.cshtml"; // 使用 _LayoutConsole.cshtml 作為布局
+    ViewData["Title"] = "問題列表";
+}
+
+<h1>問題列表</h1>
+
+<!-- Tabs -->
+<ul class="nav nav-tabs" id="qaTabs" role="tablist">
+    <li class="nav-item">
+        <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true">全部</button>
+    </li>
+    <li class="nav-item">
+        <button class="nav-link" id="solved-tab" data-bs-toggle="tab" data-bs-target="#solved" type="button" role="tab" aria-controls="solved" aria-selected="false">已解決</button>
+    </li>
+    <li class="nav-item">
+        <button class="nav-link" id="unsolved-tab" data-bs-toggle="tab" data-bs-target="#unsolved" type="button" role="tab" aria-controls="unsolved" aria-selected="false">未解決</button>
+    </li>
+</ul>
+
+<!-- Tab Content -->
+<div class="tab-content" id="qaTabContent">
+    <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
+        @Html.Partial("_QAList", Model, new ViewDataDictionary(ViewData) { { "Tab", "all" } })
+    </div>
+
+    <div class="tab-pane fade" id="solved" role="tabpanel" aria-labelledby="solved-tab">
+        @Html.Partial("_QAList", Model.Where(qa => qa.Solve), new ViewDataDictionary(ViewData) { { "Tab", "solved" } })
+    </div>
+
+    <div class="tab-pane fade" id="unsolved" role="tabpanel" aria-labelledby="unsolved-tab">
+        @Html.Partial("_QAList", Model.Where(qa => !qa.Solve), new ViewDataDictionary(ViewData) { { "Tab", "unsolved" } })
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // 綁定 Tab 切換事件
+        const tabs = document.querySelectorAll('[data-bs-toggle="tab"]');
+        tabs.forEach(tab => {
+            tab.addEventListener("shown.bs.tab", function (event) {
+                const targetTabId = event.target.getAttribute("data-bs-target").replace("#", "");
+                console.log(`Tab changed to: ${targetTabId}`);
+                reloadTabContent(targetTabId); // 切換時重新加載內容
+            });
+        });
+
+        // 初次綁定所有 Tab 內容的按鈕事件
+        bindReplyButtons(document);
+    });
+
+    function bindReplyButtons(scope) {
+        const buttons = scope.querySelectorAll("button[data-qano]");
+        buttons.forEach(button => {
+            const qaNo = button.getAttribute("data-qano");
+            const question = button.getAttribute("data-question");
+            button.onclick = function () {
+                showReplyForm(qaNo, question);
+            };
+        });
+    }
+
+    function showReplyForm(qaNo, question) {
+        console.log(`Attempting to show reply form for qaNo: ${qaNo}`);
+        const activeTab = document.querySelector('.tab-pane.active');
+        if (!activeTab) {
+            console.error("No active tab found!");
+            return;
+        }
+
+        const replyRow = activeTab.querySelector(`#reply-row-${qaNo}`);
+        const replyFormContainer = activeTab.querySelector(`#reply-form-${qaNo}`);
+        if (!replyRow || !replyFormContainer) {
+            console.error(`Element not found for qaNo: ${qaNo}`);
+            alert("無法找到對應的元素，請檢查問題列表生成是否正確。");
+            return;
+        }
+
+        replyRow.style.display = replyRow.style.display === "none" ? "" : "none";
+
+        if (replyFormContainer.innerHTML.trim() !== "") {
+            console.log("Reply form already generated.");
+            return;
+        }
+
+        replyFormContainer.innerHTML = `
+            <div>
+                <p><strong>問題內容:</strong> ${question}</p>
+                <form onsubmit="submitReply(event, '${qaNo}')">
+                    <div class="form-group">
+                        <label for="answer-${qaNo}">回答內容</label>
+                        <textarea id="answer-${qaNo}" class="form-control" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="name-${qaNo}">回答人</label>
+                        <input id="name-${qaNo}" class="form-control" required />
+                    </div>
+                    <button type="submit" class="btn btn-success btn-sm">提交回覆</button>
+                </form>
+            </div>
+        `;
+    }
+
+    function submitReply(event, qaNo) {
+        event.preventDefault();
+        const answer = document.getElementById(`answer-${qaNo}`).value;
+        const name = document.getElementById(`name-${qaNo}`).value;
+
+        console.log(`Submitting reply for qaNo: ${qaNo}`);
+        fetch(`/ConsoleQA/ReplyAjax`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ QaNo: qaNo, Answer: answer, Name: name })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert("回覆提交成功！");
+                reloadTabContent("all"); // 提交後刷新所有 Tab
+                reloadTabContent("solved");
+                reloadTabContent("unsolved");
+            } else {
+                alert("回覆提交失敗：" + data.message);
+            }
+        })
+        .catch(error => {
+            console.error("提交失敗：", error);
+            alert("提交失敗，請稍後再試！");
+        });
+    }
+
+    function reloadTabContent(tabId) {
+        fetch(`/ConsoleQA/GetTabContent?tab=${tabId}`)
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById(tabId).innerHTML = html;
+                bindReplyButtons(document.getElementById(tabId)); // 重新綁定按鈕事件
+            })
+            .catch(error => {
+                console.error(`Failed to reload tab content for ${tabId}:`, error);
+                alert("無法刷新當前頁面內容，請稍後再試！");
+            });
+    }
+</script>
