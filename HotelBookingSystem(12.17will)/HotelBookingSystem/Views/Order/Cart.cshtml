@@ -30,7 +30,7 @@
                     <th>房間名稱</th>
                     <th>入住日期</th>
                     <th>退房日期</th>
-                    <th>總金額</th>
+                    <th>金額</th>
                     <th>操作</th>
                 </tr>
             </thead>
@@ -53,6 +53,10 @@
                 }
             </tbody>
         </table>
+        <!-- 顯示總金額 -->
+        <div class="text-right mt-4">
+            <h5>總金額：@ViewBag.TotalAmount.ToString("C")</h5>
+        </div>
     }
     else
     {

@@ -56,7 +56,6 @@
                         <td>@room.RoomContent</td>
                         <td>
                             <a href="@Url.Action("ReserveRoomForm", "Order", new { roomNo = room.RoomNo })" class="btn btn-primary">預訂</a>
-                            <button class="btn btn-info check-availability" data-roomno="@room.RoomNo">查看已被訂日</button>
                         </td>
                     </tr>
                 }
@@ -64,61 +63,3 @@
         </table>
     }
 </div>
-
-
-<!-- 可用性檢查 Modal -->
-<div id="availability-modal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">已被預訂日期</h5>
-            </div>
-            <div class="modal-body">
-                <div id="availability-dates" class="text-center">
-                    <p>正在加載可用日期...</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-@section Scripts {
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            $(".check-availability").click(function () {
-                var roomNo = $(this).data("roomno");
-                var button = $(this);
-                button.prop("disabled", true).text("加載中...");
-
-                $("#availability-dates").html("<p>正在加載可用日期...</p>");
-
-                $.ajax({
-                    url: `/Order/CheckRoomAvailability/${roomNo}`,
-                    type: "GET",
-                            success: function (response) {
-            if (response.success) {
-                        let bookings = response.bookings; // 這是後端返回的具體日期清單
-                let availabilityHtml = bookings.map(booking => {
-                    return `<p>已預訂日期：<strong>${booking}</strong></p>`; // 顯示每個日期
-                }).join("");
-
-                if (!availabilityHtml) {
-                    availabilityHtml = "<p>該房間目前完全可用。</p>";
-                }
-                $("#availability-dates").html(availabilityHtml);
-            } else {
-                $("#availability-dates").html(`<p class="text-danger">${response.message || "無法檢查房間可用性。"}</p>`);
-            }
-            $("#availability-modal").modal("show");
-        },
-                    error: function () {
-                        $("#availability-dates").html("<p class='text-danger'>檢查房間可用性時發生錯誤，請稍後再試！</p>");
-                    },
-                    complete: function () {
-                        button.prop("disabled", false).text("查看已被訂日");
-                    }
-                });
-            });
-        });
-    </script>
-}

@@ -67,6 +67,50 @@ namespace HotelBookingSystem.Controllers
             }
         }
 
+        private string GeneratePasswordResetEmailBody(string userName, string newPassword)
+        {
+            return
+            $@"<html>
+    <body style='font-family: Arial, sans-serif; line-height: 1.6; color: #333;'>
+        <p>您好，{userName}：</p>
+
+        <p>您的新密碼已經重置成功，請使用以下密碼登入系統：</p>
+
+        <p style='font-size: 18px; color: #ff4500; font-weight: bold;'>
+            {newPassword}
+        </p>
+
+        <p>
+            為了保護您的帳號安全，請您登入後盡快修改密碼。<br>
+            建議您將密碼設為包含大寫字母、小寫字母、數字及特殊符號的組合，
+            並避免使用過於簡單的密碼。
+        </p>
+
+        <p>
+            您可以點擊以下連結登入系統：<br>
+            <a href='https://hotelconsole.lazzydog.store:9985/' 
+               style='color: #1a0dab; text-decoration: none; font-size: 16px;'>
+                點擊這裡登入系統
+            </a>
+        </p>
+
+        <p>
+            若您並未申請密碼重置，請立即與系統管理員聯繫，避免帳號遭到未授權的使用。
+        </p>
+
+        <p>
+            感謝您的使用，祝您順心！
+        </p>
+
+        <p>系統管理團隊 敬上</p>
+    </body>
+    </html>";
+        }
+
+
+
+
+
         [HttpPost]
         public IActionResult AddUser(User user)
         {
@@ -77,7 +121,7 @@ namespace HotelBookingSystem.Controllers
 
             if (_context.Users.Any(u => u.UserName == user.UserName))
             {
-                TempData["Error"] = "User already exists.";
+                TempData["Error"] = "後台使用者已存在。";
                 return RedirectToAction("UserManagement");
             }
 
@@ -87,7 +131,7 @@ namespace HotelBookingSystem.Controllers
             _context.Users.Add(user);
             _context.SaveChanges();
 
-            TempData["Success"] = "User added successfully.";
+            TempData["Success"] = "用戶新增成功。";
             return RedirectToAction("UserManagement");
         }
 
@@ -113,23 +157,23 @@ namespace HotelBookingSystem.Controllers
                 // 检查是否为 Admin 用户或当前登录用户
                 if (user.UserName.ToLower() == "admin")
                 {
-                    TempData["Error"] = "Admin user cannot be deactivated.";
+                    TempData["Error"] = "管理員使用者無法被停用。";
                 }
                 else if (user.UserName.ToLower() == currentUserName.ToLower())
                 {
-                    TempData["Error"] = "You cannot deactivate your own account.";
+                    TempData["Error"] = "您無法停用自己的帳戶。";
                 }
                 else
                 {
                     // 切换激活状态
                     user.Activate = !user.Activate;
                     _context.SaveChanges();
-                    TempData["Success"] = "User activation status updated successfully.";
+                    TempData["Success"] = "用戶啟動狀態更新成功。";
                 }
             }
             else
             {
-                TempData["Error"] = "User not found.";
+                TempData["Error"] = "未找到用戶。";
             }
 
             return RedirectToAction("UserManagement");
@@ -154,7 +198,7 @@ namespace HotelBookingSystem.Controllers
                 // 检查是否尝试删除 Admin 用户或当前登录用户
                 if (user.UserName.ToLower() == "admin")
                 {
-                    TempData["Error"] = "Admin user cannot be deleted.";
+                    TempData["Error"] = "管理員用戶無法刪除。";
                 }
                 else if (user.UserName.ToLower() == currentUserName.ToLower())
                 {
@@ -170,7 +214,7 @@ namespace HotelBookingSystem.Controllers
             }
             else
             {
-                TempData["Error"] = "User not found.";
+                TempData["Error"] = "未找到用戶。";
             }
 
             return RedirectToAction("UserManagement");
@@ -218,13 +262,13 @@ namespace HotelBookingSystem.Controllers
             var user = _context.Users.FirstOrDefault(u => u.AdminNo == AdminNo);
             if (user == null)
             {
-                TempData["Error"] = "User not found.";
+                TempData["Error"] = "未找到用戶。";
                 return RedirectToAction("UserManagement");
             }
 
             if (user.UserName.ToLower() == "admin")
             {
-                TempData["Error"] = "Cannot change the password for Admin.";
+                TempData["Error"] = "無法更改管理員密碼。";
                 return RedirectToAction("UserManagement");
             }
 
@@ -238,12 +282,16 @@ namespace HotelBookingSystem.Controllers
             // 發送新密碼到使用者 Email
             try
             {
-                SendEmail(user.Email, "Password Reset", $"Hello {user.UserName},\n\nYour new password is: {newPassword}\n\nPlease log in and change it as soon as possible.");
-                TempData["Success"] = "Password updated successfully. An email with the new password has been sent.";
+                // 定義 Email 標題和內容
+                string emailSubject = "密碼重置";
+                string emailBody = GeneratePasswordResetEmailBody(user.UserName, newPassword);
+                // 發送 Email
+                SendEmail(user.Email, emailSubject, emailBody);
+                TempData["Success"] = "密碼更新成功。包含新密碼的電子郵件已傳送。";
             }
             catch (Exception ex)
             {
-                TempData["Error"] = $"Password updated successfully, but failed to send email: {ex.Message}";
+                TempData["Error"] = $"密碼更新成功，但發送電子郵件失敗: {ex.Message}";
             }
 
             return RedirectToAction("UserManagement");
@@ -262,16 +310,16 @@ namespace HotelBookingSystem.Controllers
             var smtpClient = new SmtpClient("smtp.gmail.com")
             {
                 Port = 587,
-                Credentials = new NetworkCredential("x94g4jo3@gmail.com", "eysa wfln dypm qoyd"),
+                Credentials = new NetworkCredential("hotellazzydog@gmail.com", "lbiu mbvn zdsj zxei"),
                 EnableSsl = true,
             };
 
             var mailMessage = new MailMessage
             {
-                From = new MailAddress("x94g4jo3@gmail.com"),
+                From = new MailAddress("hotellazzydog@gmail.com"),
                 Subject = subject,
                 Body = body,
-                IsBodyHtml = false,
+                IsBodyHtml = true,
             };
             mailMessage.To.Add(toEmail);
 

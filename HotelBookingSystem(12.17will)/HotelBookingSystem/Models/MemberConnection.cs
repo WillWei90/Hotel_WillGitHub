@@ -40,6 +40,8 @@ namespace HotelBookingSystem.Models
                         UserName = reader.GetString(reader.GetOrdinal("UserName")),
                         Password = reader.GetString(reader.GetOrdinal("Password")),
                         Phone = reader.GetString(reader.GetOrdinal("Phone")),
+                        Birthday = reader.GetDateTime(reader.GetOrdinal("Birthday")),
+                        JoinDate = reader.GetDateTime(reader.GetOrdinal("JoinDate"))
                     };
                     accounts.Add(myAccount);
                 }
@@ -59,16 +61,19 @@ namespace HotelBookingSystem.Models
             string myUserName = user.UserName;
             string myPassword = user.Password;
             string myPhone = user.Phone;
+            string myBirthday = user.Birthday.ToString();
 
             SqlConnection sqlconnection = new SqlConnection(connStr);
-            SqlCommand sqlcommand = new SqlCommand(@"INSERT INTO Member(UserName,Password,Phone) VALUES(@myUserName,@myPassword,@myPhone)");
+            SqlCommand sqlcommand = new SqlCommand(@"INSERT INTO Member(UserName,Password,Birthday,Phone) VALUES(@myUserName,@myPassword, @myBirthday,@myPhone)");
             sqlcommand.Connection = sqlconnection;
 
             //加入帳號密碼電話
             //sqlcommand.Parameters.Add(new SqlParameter("@myMemberNo", user.MemberNo));
             sqlcommand.Parameters.Add(new SqlParameter("@myUserName", user.UserName));
             sqlcommand.Parameters.Add(new SqlParameter("@myPassword", user.Password));
+            sqlcommand.Parameters.Add(new SqlParameter("@myBirthday", user.Birthday));
             sqlcommand.Parameters.Add(new SqlParameter("@myPhone", user.Phone));
+
 
             //執行語法
             sqlconnection.Open();
