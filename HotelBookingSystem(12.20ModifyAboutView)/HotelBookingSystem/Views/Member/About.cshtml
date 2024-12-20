@@ -1,0 +1,346 @@
+﻿@{
+    ViewData["Title"] = "About Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section styles{
+    <style>
+        .modal-body p {
+            line-height: 1.8;
+            text-align: justify;
+            padding: 10px;
+        }
+
+        .btn-primary {
+            background-color: #333;
+            border: none;
+            padding: 10px 25px;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+
+            .btn-primary:hover {
+                background-color: #555;
+            }
+    </style>
+
+    <style>
+        .modal-dialog-scrollable {
+            max-height: 90vh;
+        }
+
+        .facility-section {
+            padding: 20px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+            .facility-section:last-child {
+                border-bottom: none;
+            }
+
+        .section-title {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #007bff;
+        }
+
+        .facility-img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .btn-primary {
+            background-color: #333;
+            border: none;
+            padding: 10px 25px;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+
+            .btn-primary:hover {
+                background-color: #555;
+            }
+
+        ul {
+            padding-left: 20px;
+            margin-top: 10px;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+    </style>
+}
+
+<!-- About Section -->
+<section class="about_section layout_padding long_section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="img-box">
+                    <img src="~/images/about-img.png" alt="">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="detail-box">
+                    <div class="heading_container">
+                        <h2>關於四季</h2>
+                    </div>
+                    <p>
+                        谷關四季溫泉飯店巴里島式的建築外觀，全館呈現出十足的南洋休閒風情
+                        館內提供給遊客多元享受的泡湯樂趣，除了湯屋外，泡湯區有棕呂露天溫泉、兒童遊戲區、及針對男女專設的霸王泉和美人湯、獨鍾裸湯的君子泉和玉女湯；給您最優質的谷關住宿體驗
+                    </p>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#aboutModal">
+                        四季初衷
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal -->
+<div class="modal fade" id="aboutModal" tabindex="-1" aria-labelledby="aboutModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="aboutModalLabel">四季初衷</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    四季溫泉飯店創立於1990年，秉持著「溫暖如家」的服務理念，
+                    我們深信溫泉不僅能療癒身體，更能撫慰心靈。在這裡，
+                    每位賓客都能感受到我們的用心，體驗最純粹的溫泉文化。
+
+                    三十年來，我們堅持以最高品質的服務，為每位蒞臨的貴賓提供難忘的住宿體驗。
+                    從建築設計到服務細節，我們力求完美，只為讓您能在此找到心靈的歸屬。
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- About Section -->
+<section class="about_section layout_padding long_section">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-6">
+                <div class="detail-box">
+                    <div class="heading_container">
+                        <h2>谷關最多泉池</h2>
+                    </div>
+                    <p>
+                        我們有谷關溫泉地區最多的泉池，霸王泉、美人湯、男女裸湯、SPA按摩湯、腳底按摩、溫泉魚等，一到四樓皆有泡湯區、還有獨鍾裸湯的君子泉和玉女湯給您最放鬆的享受
+                    </p>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#facilityModal">
+                        更多設施
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="img-box">
+                    <img src="~/images/facility-img.png" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Large Modal -->
+<div class="modal fade" id="facilityModal" tabindex="-1" aria-labelledby="facilityModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="facilityModalLabel">飯店設施介紹</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <!-- 溫泉區 -->
+                    <div class="facility-section mb-5">
+                        <h3 class="section-title">溫泉區</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <img src="~/images/spa1.jpg" alt="溫泉" class="facility-img">
+                            </div>
+                            <div class="col-md-6">
+                                <h4>豪華溫泉池</h4>
+                                <p>
+                                    我們的溫泉設施包括：
+                                    <ul>
+                                        <li>露天風呂：讓您享受戶外泡湯的樂趣</li>
+                                        <li>室內溫泉：全年無休的舒適泡湯環境</li>
+                                        <li>SPA按摩池：具有多種按摩功能的特殊溫泉池</li>
+                                        <li>足湯區：舒緩疲勞的專屬空間</li>
+                                    </ul>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 更衣室 -->
+                    <div class="facility-section mb-5">
+                        <h3 class="section-title">更衣室</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <img src="~/images/locker.jpg" alt="更衣室" class="facility-img">
+                            </div>
+                            <div class="col-md-6">
+                                <h4>舒適更衣空間</h4>
+                                <p>
+                                    提供寬敞的更衣空間，配備：
+                                    <ul>
+                                        <li>個人置物櫃</li>
+                                        <li>吹風機設施</li>
+                                        <li>梳妝台</li>
+                                        <li>淋浴間</li>
+                                    </ul>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 四季餐廳 -->
+                    <div class="facility-section mb-5">
+                        <h3 class="section-title">四季餐廳</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <img src="~/images/restaurant.jpg" alt="四季餐廳" class="facility-img">
+                            </div>
+                            <div class="col-md-6">
+                                <h4>精緻美食饗宴</h4>
+                                <p>
+                                    為您提供豐富的餐飲選擇：
+                                    <ul>
+                                        <li>早餐自助餐：提供中西式豐盛早餐</li>
+                                        <li>午晚餐料理：精選在地食材，提供各式台灣料理</li>
+                                        <li>特色風味餐：溫泉料理、季節限定菜色</li>
+                                        <li>包廂服務：提供私人包廂，適合家庭聚餐或商務宴請</li>
+                                        <li>
+                                            餐飲服務時間：
+                                            <br>早餐 05:00-10:00
+                                            <br>午餐 11:30-14:00
+                                            <br>晚餐 17:30-21:00
+                                        </li>
+                                    </ul>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 販賣部 -->
+                    <div class="facility-section mb-5">
+                        <h3 class="section-title">販賣部</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <img src="~/images/shop.jpg" alt="販賣部" class="facility-img">
+                            </div>
+                            <div class="col-md-6">
+                                <h4>便利商店</h4>
+                                <p>
+                                    販售各式飲品、零食及日用品：
+                                    <ul>
+                                        <li>在地特產</li>
+                                        <li>泡湯用品</li>
+                                        <li>紀念商品</li>
+                                        <li>日常必需品</li>
+                                    </ul>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 兒童遊戲區 -->
+                    <div class="facility-section">
+                        <h3 class="section-title">兒童遊戲區</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <img src="~/images/kids.jpg" alt="兒童遊戲區" class="facility-img">
+                            </div>
+                            <div class="col-md-6">
+                                <h4>親子同樂空間</h4>
+                                <p>
+                                    專為兒童設計的遊戲空間：
+                                    <ul>
+                                        <li>兒童溫泉池</li>
+                                        <li>遊戲設施</li>
+                                        <li>閱讀區</li>
+                                        <li>休息區</li>
+                                    </ul>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+            </div>
+        </div>
+    </div>
+</div>Z
+
+
+<!-- info section -->
+<section class="info_section long_section">
+
+    <div class="container">
+        <div class="contact_nav">
+            <a href="tel:0988555666">
+                <!--tel:協議支援在手機或支援撥號功能的應用上直接撥號-->
+                <i class="fa fa-phone" aria-hidden="true"></i>
+                <span>
+                    Call : 0988555666
+                </span>
+            </a>
+            <a href="mailto:demo@gmail.com">
+                <!--mailto:協議會打開預設的電子郵件客戶端，並填入指定的收件人地址-->
+                <i class="fa fa-envelope" aria-hidden="true"></i>
+                <span>
+                    Email : demo@gmail.com
+                </span>
+            </a>
+
+            <!--設定Google Maps 的查詢參數, target="_blank"屬性使連結在新分頁中打開，避免跳轉後離開當前頁面-->
+            <a href="https://www.google.com/maps?q=四季溫泉會館" target="_blank">
+                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                <span>
+                    424台中市和平區東關路一段溫泉巷8之1號
+                </span>
+            </a>
+        </div>
+    </div>
+</section>
+<!-- end info_section -->
+
+@section scripts{
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 確保Bootstrap的Modal功能正常運作
+            var myModal = new bootstrap.Modal(document.getElementById('aboutModal'), {
+                keyboard: false
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var facilityModal = new bootstrap.Modal(document.getElementById('facilityModal'), {
+                keyboard: false
+            });
+        });
+    </script>
+}
