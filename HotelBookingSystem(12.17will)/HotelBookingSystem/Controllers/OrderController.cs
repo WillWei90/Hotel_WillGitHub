@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotelBookingSystem.Controllers
 {
@@ -51,6 +52,7 @@ namespace HotelBookingSystem.Controllers
                 }); // 返回錯誤頁面
             }
         }
+
 
         [Authorize]
         [HttpGet]
@@ -148,6 +150,7 @@ namespace HotelBookingSystem.Controllers
                     });
                 }
 
+                //取得目前使用者的會員編號
                 var memberIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
                 if (memberIdClaim == null)
                 {
@@ -157,10 +160,19 @@ namespace HotelBookingSystem.Controllers
 
                 int memberId = int.Parse(memberIdClaim.Value);
 
+                //查詢訂單並載入房間資料
                 var orders = _context.Orders
+                    .Include(o => o.Room)
                     .Where(o => o.MemberNo == memberId)
                     .OrderByDescending(o => o.OrderDate)
                     .ToList();
+
+                // 確保每個訂單都有 RoomName
+                foreach (var order in orders)
+                {
+                    order.RoomName = order.Room?.RoomName ?? "未知房間";
+                }
+
 
                 if (!orders.Any())
                 {
@@ -179,6 +191,52 @@ namespace HotelBookingSystem.Controllers
                 });
             }
         }
+                
+        [Authorize]
+        public IActionResult OrderDetails(int orderNo)
+        {
+            try
+            {
+                if (_context.Orders == null)
+                {
+                    TempData["ErrorMessage"] = "資料庫連線異常，無法查詢訂單。";
+                    return RedirectToAction("OrderList");
+                }
+
+                //查詢訂單
+                var order = _context.Orders
+                    .Include(o => o.Room)
+                    .FirstOrDefault(o => o.OrderNo == orderNo);
+
+                if (order == null)
+                {
+                    TempData["ErrorMessage"] = "找不到指定的訂單。";
+                    return RedirectToAction("OrderList");
+                }
+
+                var room = _context.Rooms.FirstOrDefault(r => r.RoomNo == order.RoomNo);
+
+                var model = new OrderDetailsViewModel
+                {
+                    OrderNo = order.OrderNo,
+                    RoomName = order.Room?.RoomName ?? "未知房間",
+                    Price = room?.Price ?? 0,
+                    StartDate = order.StartDate,
+                    EndDate = order.EndDate,
+                    IsPay = order.IsPay,
+                    Cancel = order.Cancel,
+                    TotalAmount = order.TotalAmount
+                };
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"查詢訂單時發生錯誤：{ex.Message}";
+                return RedirectToAction("OrderList");
+            }
+        }
+
 
         [Authorize]
         [HttpGet]
@@ -222,48 +280,6 @@ namespace HotelBookingSystem.Controllers
         }
 
         [Authorize]
-        public IActionResult OrderDetails(int orderNo)
-        {
-            try
-            {
-                if (_context.Orders == null)
-                {
-                    TempData["ErrorMessage"] = "資料庫連線異常，無法查詢訂單。";
-                    return RedirectToAction("OrderList");
-                }
-
-                var order = _context.Orders.FirstOrDefault(o => o.OrderNo == orderNo);
-
-                if (order == null)
-                {
-                    TempData["ErrorMessage"] = "找不到指定的訂單。";
-                    return RedirectToAction("OrderList");
-                }
-
-                var room = _context.Rooms.FirstOrDefault(r => r.RoomNo == order.RoomNo);
-
-                var model = new OrderDetailsViewModel
-                {
-                    OrderNo = order.OrderNo,
-                    RoomName = room?.RoomName ?? "未知房間",
-                    Price = room?.Price ?? 0,
-                    StartDate = order.StartDate,
-                    EndDate = order.EndDate,
-                    IsPay = order.IsPay,
-                    Cancel = order.Cancel,
-                    TotalAmount = order.TotalAmount
-                };
-
-                return View(model);
-            }
-            catch (Exception ex)
-            {
-                TempData["ErrorMessage"] = $"查詢訂單時發生錯誤：{ex.Message}";
-                return RedirectToAction("OrderList");
-            }
-        }
-
-        [Authorize]
         [HttpPost]
         public IActionResult CancelOrder(int orderNo)
         {
@@ -291,12 +307,13 @@ namespace HotelBookingSystem.Controllers
             }
         }
 
-        //取得購物車內容
+        // 取得購物車內容
         [Authorize]
         public IActionResult Cart()
         {
             try
             {
+                // 取得會員的身份識別資訊
                 var memberIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
                 if (memberIdClaim == null)
                 {
@@ -306,15 +323,34 @@ namespace HotelBookingSystem.Controllers
 
                 int memberId = int.Parse(memberIdClaim.Value);
 
-                // 查詢未付款且未取消的訂單
+                // 查詢未付款且未取消的訂單，並載入相關的房間資料
                 var cartItems = _context.Orders
+                    .Include(o => o.Room) // 載入與訂單關聯的房間資料
                     .Where(o => o.MemberNo == memberId && !o.IsPay && !o.Cancel)
+                    .Select(o => new Order
+                    {
+                        OrderNo = o.OrderNo,
+                        RoomName = o.Room.RoomName, // 設定 RoomName
+                        StartDate = o.StartDate,
+                        EndDate = o.EndDate,
+                        TotalAmount = o.TotalAmount,
+                        MemberNo = o.MemberNo,
+                        IsPay = o.IsPay,
+                        Cancel = o.Cancel
+                    })
                     .ToList();
+
+                // 計算總金額
+                decimal totalAmount = cartItems.Sum(o => o.TotalAmount);
+
+                // 使用 ViewBag 傳遞總金額到視圖
+                ViewBag.TotalAmount = totalAmount;
 
                 return View(cartItems);
             }
             catch (Exception ex)
             {
+                // 如果發生錯誤，返回錯誤頁面
                 return View("Error", new ErrorViewModel
                 {
                     Message = "無法加載購物車。",
@@ -323,6 +359,7 @@ namespace HotelBookingSystem.Controllers
                 });
             }
         }
+
 
         // 從購物車移除
         [Authorize]
@@ -352,6 +389,8 @@ namespace HotelBookingSystem.Controllers
                 return RedirectToAction("Cart");
             }
         }
+
+        //購物車結帳功能
         [Authorize]
         [HttpPost]
         public IActionResult Checkout()
