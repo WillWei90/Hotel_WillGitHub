@@ -103,5 +103,38 @@ namespace HotelBookingSystem.Models
                 }
             }
         }
+
+        public void UpdatePassword(int memberNo, string hashedPassword)
+        {
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                try
+                {
+                    conn.Open();
+                    string sql = @"UPDATE Member 
+                             SET Password = @Password 
+                             WHERE MemberNo = @MemberNo";
+
+                    using (SqlCommand cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Password", hashedPassword);
+                        cmd.Parameters.AddWithValue("@MemberNo", memberNo);
+
+                        int rowsAffected = cmd.ExecuteNonQuery();
+
+                        if (rowsAffected == 0)
+                        {
+                            throw new Exception("找不到指定的會員編號");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // 記錄錯誤並重新拋出
+                    // 您可以加入自己的錯誤處理邏輯
+                    throw new Exception($"更新密碼時發生錯誤: {ex.Message}", ex);
+                }
+            }
+        }
     }
 }
