@@ -34,6 +34,6 @@ Debug/
 **/AssemblyInfo.*
 **/RazorAssemblyInfo.*
 
-*.pubxml
-*.pubxml.user
-*.publishproj
+**/*.pubxml
+**/*.pubxml.user
+**/*.publishproj
