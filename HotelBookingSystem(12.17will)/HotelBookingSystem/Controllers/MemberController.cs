@@ -140,6 +140,9 @@ namespace HotelBookingSystem.Controllers
             {
                 try
                 {
+                    // 設定加入日期為當前時間
+                    user.JoinDate = DateTime.Now;
+
                     // 將密碼進行 MD5 加密
                     user.Password = PasswordHelper.HashPassword(user.Password);
 
@@ -175,6 +178,10 @@ namespace HotelBookingSystem.Controllers
             {
                 ViewData["ValidPhone"] = user.Phone;
             }
+            if (ModelState["Birthday"] != null && ModelState["Birthday"].Errors.Count == 0)
+            {
+                ViewData["ValidBirthday"] = user.Birthday.ToString("yyyy-MM-dd");
+            }
 
             return View(user);
         }
@@ -189,7 +196,7 @@ namespace HotelBookingSystem.Controllers
         }
 
         [HttpPost]
-        public JsonResult OnSubmit([FromBody]MemberAccount user)
+        public JsonResult OnSubmit([FromBody] MemberAccount user)
         {
             // 建立資料庫連線物件
             MemberConnection connection = new MemberConnection();
@@ -205,7 +212,7 @@ namespace HotelBookingSystem.Controllers
                 Console.WriteLine("帳號已存在");
                 return Json("帳號已存在");
             }
-                
+
             else
             {
                 Console.WriteLine(user.UserName);
@@ -324,7 +331,9 @@ namespace HotelBookingSystem.Controllers
                 _context.MemberAccounts.Update(user);
                 await _context.SaveChangesAsync();
 
-                return Ok(new { success = true, message = "密碼修改成功" });
+                // 登出
+                await HttpContext.SignOutAsync();
+                return Ok(new { success = true, message = "密碼修改成功，請重新登入", forceSignOut = true });
             }
             catch (Exception ex)
             {
@@ -332,5 +341,57 @@ namespace HotelBookingSystem.Controllers
                 return StatusCode(500, new { success = false, message = "發生未預期的錯誤" });
             }
         }
+
+        [HttpPost]
+        [Authorize]
+        [Route("api/[controller]/ChangePhone")]
+        public async Task<IActionResult> ChangePhoneApi([FromBody] ChangePhoneViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    errors = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
+            }
+
+            try
+            {
+                var user = await _context.MemberAccounts
+                    .FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
+
+                if (user == null)
+                {
+                    return NotFound(new { success = false, message = "找不到使用者" });
+                }
+
+                if (user.Phone != model.CurrentPhone)
+                {
+                    return BadRequest(new { success = false, message = "目前電話不正確" });
+                }
+
+                if (model.NewPhone != model.ConfirmPhone)
+                {
+                    return BadRequest(new { success = false, message = "新電話與確認電話不一致" });
+                }
+
+                user.Phone = model.NewPhone;
+                _context.MemberAccounts.Update(user);
+                await _context.SaveChangesAsync();
+
+                // 登出
+                await HttpContext.SignOutAsync();
+                return Ok(new { success = true, message = "電話修改成功，請重新登入", forceSignOut = true });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "電話變更時發生錯誤");
+                return StatusCode(500, new { success = false, message = "發生未預期的錯誤" });
+            }
+        }
+
     }
 }

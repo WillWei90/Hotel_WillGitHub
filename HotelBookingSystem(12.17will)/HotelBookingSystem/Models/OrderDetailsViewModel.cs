@@ -9,5 +9,6 @@
         public DateTime EndDate { get; set; }
         public bool IsPay { get; set; }
         public bool Cancel { get; set; }
+        public decimal TotalAmount { get; set; }
     }
 }

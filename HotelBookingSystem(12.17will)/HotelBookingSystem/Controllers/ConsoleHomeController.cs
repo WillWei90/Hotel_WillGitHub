@@ -99,7 +99,7 @@ namespace HotelBookingSystem.Controllers
 
             if (string.IsNullOrEmpty(userName))
             {
-                return Json(new { success = false, message = "User is not logged in." });
+                return Json(new { success = false, message = "用戶未登入。" });
             }
 
             string menuHtml = "";
@@ -109,18 +109,22 @@ namespace HotelBookingSystem.Controllers
             <li class='nav-item'><a class='nav-link text-dark' href='/ConsoleMember/MemberManagement'>會員管理</a></li>
             <li class='nav-item'><a class='nav-link text-dark' href='/ConsoleOrder/OrderManagement'>訂單管理</a></li>
             <li class='nav-item'><a class='nav-link text-dark' href='/ConsoleRoom/Room'>客房管理</a></li>
+            <li class='nav-item'><a class='nav-link text-dark' href='/ConsoleQA/index'>客戶問題</a></li>
             <li class='nav-item'><a class='nav-link text-dark' href='/ConsoleUser/UserManagement'>使用者管理</a></li>";
             }
             else if (permissionFlag == "Product")
             {
                 menuHtml = @"
-            <li class='nav-item'><a class='nav-link text-dark' href='/ConsoleRoom/Room'>客房管理</a></li>";
+            <li class='nav-item'><a class='nav-link text-dark' href='/ConsoleRoom/Room'>客房管理</a></li>
+            <li class='nav-item'><a class='nav-link text-dark' href='/ConsoleQA/index'>客戶問題</a></li>";
+
             }
             else if (permissionFlag == "Customer")
             {
                 menuHtml = @"
             <li class='nav-item'><a class='nav-link text-dark' href='/ConsoleMember/MemberManagement'>會員管理</a></li>
-            <li class='nav-item'><a class='nav-link text-dark' href='/ConsoleOrder/OrderManagement'>訂單管理</a></li>";
+            <li class='nav-item'><a class='nav-link text-dark' href='/ConsoleOrder/OrderManagement'>訂單管理</a></li>
+            <li class='nav-item'><a class='nav-link text-dark' href='/ConsoleQA/index'>客戶問題</a></li>";
             }
 
             return Json(new { success = true, userName = userName, menuHtml = menuHtml });
@@ -131,7 +135,7 @@ namespace HotelBookingSystem.Controllers
         {
             if (!HttpContext.Session.TryGetValue("UserName", out byte[] userNameBytes))
             {
-                return Json(new { success = false, message = "User not logged in." });
+                return Json(new { success = false, message = "用戶未登入。" });
             }
 
             var userName = System.Text.Encoding.UTF8.GetString(userNameBytes);
@@ -139,17 +143,17 @@ namespace HotelBookingSystem.Controllers
 
             if (user == null)
             {
-                return Json(new { success = false, message = "User not found." });
+                return Json(new { success = false, message = "未找到用戶。" });
             }
 
             if (user.Password != PasswordHelper.HashPassword(CurrentPassword))
             {
-                return Json(new { success = false, message = "Current password is incorrect." });
+                return Json(new { success = false, message = "目前密碼不正確。" });
             }
 
             if (NewPassword != ConfirmPassword)
             {
-                return Json(new { success = false, message = "New password and confirmation do not match." });
+                return Json(new { success = false, message = "新密碼和確認密碼不符。" });
             }
 
             user.Password = PasswordHelper.HashPassword(NewPassword);
