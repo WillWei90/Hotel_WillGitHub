@@ -37,3 +37,4 @@ Debug/
 **/*.pubxml
 **/*.pubxml.user
 **/*.publishproj
+**/*.csproj.user
