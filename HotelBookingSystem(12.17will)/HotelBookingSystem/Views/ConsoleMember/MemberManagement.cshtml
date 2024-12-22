@@ -20,66 +20,106 @@
         </div>
     </form>
 
-    <!-- 會員列表 -->
-    @if (Model != null && Model.Any())
+    <!-- 當搜尋結果不為空時顯示會員資料 -->
+    @if (!string.IsNullOrEmpty(ViewBag.SearchTerm) && Model != null && Model.Any())
     {
-        <h3 class="mt-4">會員列表</h3>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>會員編號</th>
-                    <th>姓名</th>
-                    <th>電話</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var member in Model)
-                {
+        <h3 class="mt-4">會員資料</h3>
+        <div class="member-details">
+            <div class="member-photo">
+                <!-- 使用 images/noimage.jpg 當作預設圖片 -->
+                <img src="~/images/noimage.jpg" alt="Profile Picture" class="img-fluid rounded-circle" style="max-width: 120px;" />
+            </div>
+            <div class="member-info">
+                <h5 class="card-title">@Model.FirstOrDefault().UserName</h5>
+                <p>
+                    <strong>電話:</strong> @Model.FirstOrDefault().Phone <br />
+                    <strong>生日:</strong> @Model.FirstOrDefault().Birthday.ToString("yyyy-MM-dd")<br />
+                    <strong>會員加入:</strong> @Model.FirstOrDefault().JoinDate.ToString("yyyy-MM-dd")<br />
+                </p>
+            </div>
+        </div>
+
+        <!-- 按鈕: 修改會員資料 -->
+        <button class="btn btn-info btn-sm mt-3" data-bs-toggle="modal" data-bs-target="#editMemberModal">修改會員資料</button>
+
+        <!-- 按鈕: 顯示訂單 -->
+        <a href="javascript:void(0);" class="btn btn-secondary btn-sm mt-3" onclick="viewOrders(@Model.FirstOrDefault().MemberNo)">查看訂單</a>
+
+        <!-- 訂單顯示區域 -->
+        <div id="orderList" class="mt-5" style="display:none;">
+            <h3 class="text-center">訂單列表</h3>
+            <table class="table table-striped">
+                <thead>
                     <tr>
-                        <td>@member.MemberNo</td>
-                        <td>@member.UserName</td>
-                        <td>@member.Phone</td>
-                        <td>
-                            <!-- 查看訂單按鈕 -->
-                            <button class="btn btn-info btn-sm" onclick="viewOrders(@member.MemberNo)">查看訂單</button>
-                        </td>
+                        <th>訂單號</th>
+                        <th>房號</th>
+                        <th>房名</th>
+                        <th>開始日期</th>
+                        <th>結束日期</th>
+                        <th>付款狀態</th>
+                        <th>取消狀態</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody id="orderListContent">
+                    <!-- 動態生成訂單內容 -->
+                </tbody>
+            </table>
+            <button class="btn btn-secondary" onclick="hideOrders()">隱藏訂單</button>
+        </div>
     }
-    else
+    else if (string.IsNullOrEmpty(ViewBag.SearchTerm))
     {
         <p class="text-center text-muted">請輸入查詢條件以檢視會員資料。</p>
     }
+    else
+    {
+        <p class="text-center text-muted">未找到相關會員資料。</p>
+    }
+</div>
 
-    <!-- 訂單列表 -->
-    <div id="orderList" class="mt-5" style="display:none;">
-        <h3 class="text-center">訂單列表</h3>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>訂單號</th>
-                    <th>房號</th>
-                    <th>房名</th>
-                    <th>開始日期</th>
-                    <th>結束日期</th>
-                    <th>付款狀態</th>
-                    <th>取消狀態</th>
-                </tr>
-            </thead>
-            <tbody id="orderListContent">
-                <!-- 動態生成 -->
-            </tbody>
-        </table>
-        <button class="btn btn-secondary" onclick="hideOrders()">隱藏訂單</button>
+<!-- 彈跳視窗 -->
+<div class="modal fade" id="editMemberModal" tabindex="-1" aria-labelledby="editMemberModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editMemberModalLabel">編輯會員資料</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- 修改表單 -->
+                <form id="editMemberForm">
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden" name="MemberNo" value="@Model.FirstOrDefault().MemberNo" />
+
+                    <div class="mb-3">
+                        <label for="UserName" class="form-label">會員名稱</label>
+                        <input type="text" class="form-control" id="UserName" name="UserName" value="@Model.FirstOrDefault().UserName" readonly required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="Phone" class="form-label">電話</label>
+                        <input type="text" class="form-control" id="Phone" name="Phone" value="@Model.FirstOrDefault().Phone" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="Birthday" class="form-label">生日</label>
+                        <input type="date" class="form-control" id="Birthday" name="Birthday" value="@Model.FirstOrDefault().Birthday.ToString("yyyy-MM-dd")" readonly required />
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-warning" onclick="resetPassword(@Model.FirstOrDefault().MemberNo)">重置密碼</button>
+                        <button type="button" class="btn btn-primary" onclick="updateMember()">更新資料</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 
 <script>
     // 顯示訂單
-            function viewOrders(memberNo) {
+    function viewOrders(memberNo) {
         fetch(`/ConsoleMember/GetOrdersByMemberNo?memberNo=${memberNo}`)
             .then(response => response.json())
             .then(data => {
@@ -118,6 +158,88 @@
     function hideOrders() {
         document.getElementById("orderList").style.display = "none";
     }
+
+    // 更新會員資料的API呼叫
+    function updateMember() {
+        const memberData = {
+            MemberNo: document.querySelector("input[name='MemberNo']").value,
+            Phone: document.querySelector("input[name='Phone']").value,
+        };
+
+        fetch('/api/member/update', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(memberData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('會員資料已更新');
+                location.reload(); // 重新加載頁面以顯示更新後的資料
+            } else {
+                alert('更新失敗: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('錯誤:', error);
+            alert('更新會員資料時出現錯誤');
+        });
+    }
+
+    // 重置密碼的API呼叫
+    function resetPassword(memberNo) {
+        if (confirm("確定要重置密碼嗎？")) {
+            fetch(`/ConsoleMember/ResetPassword/${memberNo}`, {
+                method: 'POST',
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(`密碼重置成功`);
+                } else {
+                    alert('重置密碼失敗: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('錯誤:', error);
+                alert('重置密碼時出現錯誤');
+            });
+        }
+    }
 </script>
 
 
+<style>
+    /* 會員資料區樣式 */
+    .member-details {
+        display: flex;
+        justify-content: flex-start; /* 改為靠左對齊 */
+        align-items: center;
+        gap: 20px; /* 調整圖片與文字間的間距 */
+        margin-top: 20px;
+    }
+
+    /* 會員圖片區 */
+    .member-photo {
+        flex-shrink: 0; /* 防止圖片縮小 */
+    }
+
+    /* 會員資訊區 */
+    .member-info {
+        max-width: 500px;
+        text-align: left;
+    }
+
+    /* 卡片風格 */
+    .card-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .card-text {
+        font-size: 1rem;
+        color: #555;
+    }
+</style>

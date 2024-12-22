@@ -135,15 +135,15 @@
                                         <div id="passwordFields" style="display: none;">
                                             <div class="form-group">
                                                 <label for="currentPassword">目前密碼</label>
-                                                <input type="password" class="form-control" id="currentPassword" name="CurrentPassword">
+                                                <input type="password" class="form-control" id="currentPassword" name="CurrentPassword" placeholder="目前密碼">
                                             </div>
                                             <div class="form-group">
                                                 <label for="newPassword">新密碼</label>
-                                                <input type="password" class="form-control" id="newPassword" name="NewPassword">
+                                                <input type="password" class="form-control" id="newPassword" name="NewPassword" placeholder="新密碼至少8字元且有一個字母和一個數字">
                                             </div>
                                             <div class="form-group">
                                                 <label for="confirmPassword">確認新密碼</label>
-                                                <input type="password" class="form-control" id="confirmPassword" name="ConfirmPassword">
+                                                <input type="password" class="form-control" id="confirmPassword" name="ConfirmPassword" placeholder="再次輸入新密碼">
                                             </div>
                                         </div>
 
@@ -151,15 +151,15 @@
                                         <div id="phoneFields" style="display: none;">
                                             <div class="form-group">
                                                 <label for="currentPhone">目前電話</label>
-                                                <input type="text" class="form-control" id="currentPhone" name="CurrentPhone" pattern="^09\d{8}$">
+                                                <input type="text" class="form-control" id="currentPhone" name="CurrentPhone" pattern="^09\d{8}$" placeholder="目前電話">
                                             </div>
                                             <div class="form-group">
                                                 <label for="newPhone">新電話</label>
-                                                <input type="text" class="form-control" id="newPhone" name="NewPhone" pattern="^09\d{8}$">
+                                                <input type="text" class="form-control" id="newPhone" name="NewPhone" pattern="^09\d{8}$" placeholder="新電話">
                                             </div>
                                             <div class="form-group">
                                                 <label for="confirmPhone">確認新電話</label>
-                                                <input type="text" class="form-control" id="confirmPhone" name="ConfirmPhone" pattern="^09\d{8}$">
+                                                <input type="text" class="form-control" id="confirmPhone" name="ConfirmPhone" pattern="^09\d{8}$" placeholder="再次輸入新電話">
                                             </div>
                                         </div>
                                     </div>
@@ -207,7 +207,7 @@
             document.getElementById('phoneFields').style.display = option === 'phone' ? 'block' : 'none';
         });
     </script>
-
+    changeOption
     <script> //改密碼或電話用的script
         $(document).ready(function () {
             $('#changeInfoForm').on('submit', function (e) {
@@ -223,6 +223,24 @@
                 } else {
                     alert('請選擇要修改的項目');
                 }
+            });
+
+            $(document).ready(function () {
+                $('#changeOption').on('change', function () {
+                    const selectedOption = $(this).val();
+
+                    // 動態顯示不同的表單欄位
+                    if (selectedOption === 'password') {
+                        $('#passwordFields').show();
+                        $('#phoneFields').hide();
+                    } else if (selectedOption === 'phone') {
+                        $('#passwordFields').hide();
+                        $('#phoneFields').show();
+                    } else {
+                        $('#passwordFields').hide();
+                        $('#phoneFields').hide();
+                    }
+                });
             });
 
             function handleResponse(response) {
