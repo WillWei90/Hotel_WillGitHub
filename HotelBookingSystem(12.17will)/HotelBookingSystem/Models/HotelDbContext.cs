@@ -15,6 +15,7 @@ namespace HotelBookingSystem.Models
 
         //will新增
         public DbSet<MemberAccount> MemberAccounts { get; set; }
+        public DbSet<QA> QAs { get; set; } 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -44,6 +45,8 @@ namespace HotelBookingSystem.Models
                 .HasOne<Member>() // 與 Member 建立一對一關係
                 .WithOne() // 另一側也是一對一
                 .HasForeignKey<MemberAccount>(m => m.MemberNo); // 使用 MemberNo 作為外鍵
+
+            modelBuilder.Entity<QA>().ToTable("QA"); // 指定資料表名稱為 QA
         }
     }
 }
