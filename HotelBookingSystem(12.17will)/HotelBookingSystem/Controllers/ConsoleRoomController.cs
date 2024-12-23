@@ -15,49 +15,48 @@ namespace HotelBookingSystem.Controllers
             _context = context;
         }
 
-        public IActionResult Room(string keyword = "", bool? activate = null, int page = 1, int pageSize = 10)
+        public IActionResult Room(string keyword = "", bool? activate = null, int page = 1, int pageSize = 5)
         {
-            //// 驗證是否已登入
-            //var userName = HttpContext.Session.GetString("UserName");
-            //if (string.IsNullOrEmpty(userName))
-            //{
-            //    return RedirectToAction("Login", "ConsoleHome"); // 未登入時重定向到登入頁面
-            //}
+            // 驗證是否已登入
+            var userName = HttpContext.Session.GetString("UserName");
+            if (string.IsNullOrEmpty(userName))
+            {
+                return RedirectToAction("Login", "ConsoleHome"); // 未登入時重定向到登入頁面
+            }
 
-            // 傳遞 UserName 到 Layout
-            //ViewBag.UserName = userName;
-
-            // 查詢房間數據
             var query = _context.Rooms.AsQueryable();
 
-            if (!string.IsNullOrEmpty(keyword))
-            {
-                query = query.Where(r => r.RoomName.Contains(keyword));
-            }
-
-            if (activate.HasValue)
-            {
-                query = query.Where(r => r.Activate == activate.Value);
-            }
-
             var totalRecords = query.Count();
+
             var rooms = query
                 .OrderBy(r => r.RoomNo)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
+                .Select(r => new Room
+                {
+                    RoomNo = r.RoomNo,
+                    RoomName = r.RoomName ?? "Unknown",
+                    Price = r.Price,
+                    RoomType = r.RoomType ?? "Unspecified",
+                    Address = r.Address ?? "No Address",
+                    RoomContent = r.RoomContent ?? "No Content",
+                    ImagePath = r.ImagePath ?? null, // 保留可能為 null
+                    RoomCapacity = r.RoomCapacity ?? 0,
+                    Activate = r.Activate,
+                    ProfilePicture = r.ProfilePicture // 保留可能為 null
+                })
                 .ToList();
 
-            // 填充分頁屬性
-            if (rooms.Any())
-            {
-                rooms[0].TotalRecords = totalRecords;
-                rooms[0].PageSize = pageSize;
-                rooms[0].CurrentPage = page;
-                rooms[0].TotalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
-            }
+            ViewBag.TotalRecords = totalRecords;
+            ViewBag.PageSize = pageSize;
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
 
             return View(rooms);
         }
+
+
+
 
         public IActionResult Add()
         {
@@ -65,20 +64,30 @@ namespace HotelBookingSystem.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Add(Room room)
+        public IActionResult Add(Room model, IFormFile ProfilePicture)
         {
             if (ModelState.IsValid)
             {
-                _context.Rooms.Add(room);
+                if (ProfilePicture != null && ProfilePicture.Length > 0)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        ProfilePicture.CopyTo(memoryStream);
+                        model.ProfilePicture = memoryStream.ToArray(); // 將圖片轉換為二進制數據存入資料庫
+                    }
+                }
+
+                _context.Rooms.Add(model); // 將房間資料存入資料庫
                 _context.SaveChanges();
-                TempData["Success"] = "房間添加成功！";
+
+                TempData["Success"] = "房間新增成功！";
                 return RedirectToAction("Room");
             }
 
-            TempData["Error"] = "添加房間時出現錯誤，請檢查輸入！";
-            return View(room);
+            TempData["Error"] = "新增失敗，請檢查輸入的資料。";
+            return View(model);
         }
+
 
         public IActionResult Edit(int roomNo)
         {
@@ -94,22 +103,20 @@ namespace HotelBookingSystem.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Room room)
+        public IActionResult Edit(Room room, IFormFile ProfilePicture)
         {
-            Console.WriteLine($"RoomNo: {room.RoomNo}");
-            Console.WriteLine($"RoomName: {room.RoomName}");
-            Console.WriteLine($"Activate (啟用狀態): {room.Activate}");
-
             if (ModelState.IsValid)
             {
-                var existingRoom = _context.Rooms.Find(room.RoomNo);
+                // 查找要更新的房間資料
+                var existingRoom = _context.Rooms.FirstOrDefault(r => r.RoomNo == room.RoomNo);
+
                 if (existingRoom == null)
                 {
-                    TempData["Error"] = "找不到指定的房間！";
+                    TempData["Error"] = "找不到指定的房間資料！";
                     return RedirectToAction("Room");
                 }
 
-                // 更新房間資料
+                // 更新資料
                 existingRoom.RoomName = room.RoomName;
                 existingRoom.Price = room.Price;
                 existingRoom.RoomType = room.RoomType;
@@ -117,19 +124,27 @@ namespace HotelBookingSystem.Controllers
                 existingRoom.RoomContent = room.RoomContent;
                 existingRoom.Activate = room.Activate;
 
+                // 如果有上傳新圖片，更新 ProfilePicture 欄位
+                if (ProfilePicture != null && ProfilePicture.Length > 0)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        ProfilePicture.CopyTo(memoryStream);
+                        existingRoom.ProfilePicture = memoryStream.ToArray();
+                    }
+                }
+
+                // 保存更改
                 _context.SaveChanges();
-                TempData["Success"] = "房間更新成功！";
+
+                TempData["Success"] = "房間修改成功！";
                 return RedirectToAction("Room");
             }
 
-            var errors = ModelState.Values
-            .SelectMany(v => v.Errors) // 收集所有的錯誤
-            .Select(e => e.ErrorMessage) // 取得錯誤訊息字串
-            .ToList();
-            TempData["Error"] = string.Join("; ", errors); // 將錯誤訊息用分號分隔
-            //TempData["Error"] = $"修改房間時出現錯誤，請檢查輸入！{room.Activate}";
+            TempData["Error"] = "修改房間時出現錯誤，請檢查輸入！";
             return RedirectToAction("Room");
         }
+
     }
 }
 
