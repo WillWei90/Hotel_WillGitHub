@@ -1,0 +1,132 @@
+﻿@{
+    ViewData["Title"] = "QA 列表";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .qa-card {
+        margin-bottom: 20px;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .qa-question {
+        background-color: #ffe6e6; /* 提問區塊粉色背景 */
+        border: 1px solid #ffcccc;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 10px;
+    }
+
+        .qa-question h3 {
+            color: #ff6666;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .qa-question p {
+            color: #333;
+            line-height: 1.6;
+        }
+
+    .qa-answer {
+        background-color: #e6f7ff; /* 回答區塊淺藍背景 */
+        border: 1px solid #b3d9ff;
+        border-radius: 8px;
+        padding: 15px;
+    }
+
+        .qa-answer h3 {
+            color: #0056b3;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .qa-answer p {
+            color: #333;
+            line-height: 1.6;
+        }
+
+    .qa-footer {
+        text-align: right;
+        font-size: 0.9em;
+        color: #777;
+        margin-top: 5px;
+    }
+
+    .btn-primary {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #72b7be;
+        color: #fff;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+</style>
+
+<div class="container">
+    <h2>QA 專區</h2>
+
+    @foreach (var item in Model)
+    {
+        <div class="qa-card">
+            <!-- 提問區 -->
+            <div class="qa-question">
+                <h3>提問</h3>
+                <p>問題編號：@(item.QuestionNo ?? "未提供")</p>
+                <p>@(item.Question ?? "無內容")</p>
+                <div class="qa-footer">建立時間：@(item.CreateTime == default(DateTime) ? "未提供" : item.CreateTime.ToString("yyyy-MM-dd HH:mm"))</div>
+            </div>
+
+            <!-- 回答區 -->
+            <div class="qa-answer">
+                <h3>回答</h3>
+                <p>@(item.Answer ?? "無回答")</p>
+                <p>回覆者姓名：@(item.Name ?? "未知")</p>
+                <div class="qa-footer">回覆時間：@(item.ReplyTime?.ToString("yyyy-MM-dd HH:mm") ?? "未回覆")</div>
+                <div class="qa-footer">是否解決：@(item.Solve ? "是" : "否")</div>
+            </div>
+        </div>
+    }
+
+    <!-- 新增 QA 表單 -->
+    <div class="qa-card qa-form">
+        <h3>填寫您的問題</h3>
+        <form asp-action="Create" method="post">
+            <textarea name="Question" placeholder="請輸入您的問題..." required></textarea>
+            <button type="submit">提交</button>
+        </form>
+    </div>
+
+
+    <a href="@Url.Action("Create", "QA")" class="btn btn-primary">新增 QA</a>
+</div>
