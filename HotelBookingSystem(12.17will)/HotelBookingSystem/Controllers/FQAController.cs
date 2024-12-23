@@ -19,24 +19,25 @@ namespace HotelBookingSystem.Controllers
 
         // 顯示所有 QA
        public IActionResult Index()
-{
-    // 確保處理所有可能的 NULL 值
-    var qalist = _context.QAs
-        .Select(q => new QA
         {
-            QaNo = q.QaNo ?? Guid.NewGuid().ToString(), // 若為 NULL，使用新的 GUID
-            QuestionNo = q.QuestionNo ?? "未提供",      // 預設為 "未提供"
-            Question = q.Question ?? "無內容",          // 預設為 "無內容"
-            Answer = q.Answer ?? "無回答",              // 預設為 "無回答"
-            Name = q.Name ?? "未知",                   // 預設為 "未知"
-            CreateTime = q.CreateTime,                 // 非 NULL，直接賦值
-            ReplyTime = q.ReplyTime ?? DateTime.MinValue, // 若為 NULL，設為最小時間值
-            Solve = q.Solve                            // 預設邏輯無需更改
-        })
-        .ToList();
+            // 確保處理所有可能的 NULL 值
+            var qaList = _context.QAs
+            .OrderByDescending(q => q.CreateTime) // 按創建時間降序排列
+            .Select(q => new QA
+            {
+                QaNo = q.QaNo,
+                CreateTime = q.CreateTime, // 加入創建時間
+                Question = q.Question ?? "無內容",
+                Answer = q.Answer ?? "尚未回覆",
+                Name = q.Name ?? "未知",
+                Solve = q.Solve
 
-    return View(qalist);
-}
+            })
+            .ToList(); ;
+
+
+            return View(qaList);
+        }
 
 
 

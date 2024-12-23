@@ -7,12 +7,12 @@
       "RelativeMoniker": "D:0:0:{4171EB71-F2CC-41FE-913B-3FF6F1F4375A}|HotelBookingSystem\\HotelBookingSystem.csproj|solutionrelative:hotelbookingsystem\\controllers\\fqacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4171EB71-F2CC-41FE-913B-3FF6F1F4375A}|HotelBookingSystem\\HotelBookingSystem.csproj|c:\\users\\lanli\\project\\hotel_willgithub\\hotelbookingsystem(12.17will)\\hotelbookingsystem\\views\\fqa\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{4171EB71-F2CC-41FE-913B-3FF6F1F4375A}|HotelBookingSystem\\HotelBookingSystem.csproj|solutionrelative:hotelbookingsystem\\views\\fqa\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{4171EB71-F2CC-41FE-913B-3FF6F1F4375A}|HotelBookingSystem\\HotelBookingSystem.csproj|c:\\users\\lanli\\project\\hotel_willgithub\\hotelbookingsystem(12.17will)\\hotelbookingsystem\\models\\qa.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4171EB71-F2CC-41FE-913B-3FF6F1F4375A}|HotelBookingSystem\\HotelBookingSystem.csproj|solutionrelative:hotelbookingsystem\\models\\qa.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4171EB71-F2CC-41FE-913B-3FF6F1F4375A}|HotelBookingSystem\\HotelBookingSystem.csproj|c:\\users\\lanli\\project\\hotel_willgithub\\hotelbookingsystem(12.17will)\\hotelbookingsystem\\views\\fqa\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4171EB71-F2CC-41FE-913B-3FF6F1F4375A}|HotelBookingSystem\\HotelBookingSystem.csproj|solutionrelative:hotelbookingsystem\\views\\fqa\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{4171EB71-F2CC-41FE-913B-3FF6F1F4375A}|HotelBookingSystem\\HotelBookingSystem.csproj|c:\\users\\lanli\\project\\hotel_willgithub\\hotelbookingsystem(12.17will)\\hotelbookingsystem\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
@@ -70,18 +70,17 @@
               "RelativeToolTip": "HotelBookingSystem\\Views\\Shared\\_Layout.cshtml",
               "ViewState": "AgIAADkAAAAAAAAAAAAAAB4AAAA5AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-12-19T11:16:11.951Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-19T11:16:11.951Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "QA.cs",
               "DocumentMoniker": "C:\\Users\\lanli\\project\\Hotel_WillGitHub\\HotelBookingSystem(12.17will)\\HotelBookingSystem\\Models\\QA.cs",
               "RelativeDocumentMoniker": "HotelBookingSystem\\Models\\QA.cs",
               "ToolTip": "C:\\Users\\lanli\\project\\Hotel_WillGitHub\\HotelBookingSystem(12.17will)\\HotelBookingSystem\\Models\\QA.cs",
               "RelativeToolTip": "HotelBookingSystem\\Models\\QA.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACYAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAwwBkAAAA/AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-19T10:42:19.154Z",
               "EditorCaption": ""
@@ -96,8 +95,7 @@
               "RelativeToolTip": "HotelBookingSystem\\Models\\HotelDbContext.cs",
               "ViewState": "AgIAABMAAAAAAAAAAAAgwDAAAABDAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-19T10:31:39.237Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-19T10:31:39.237Z"
             },
             {
               "$type": "Document",
@@ -105,25 +103,24 @@
               "Title": "FQAController.cs",
               "DocumentMoniker": "C:\\Users\\lanli\\project\\Hotel_WillGitHub\\HotelBookingSystem(12.17will)\\HotelBookingSystem\\Controllers\\FQAController.cs",
               "RelativeDocumentMoniker": "HotelBookingSystem\\Controllers\\FQAController.cs",
-              "ToolTip": "C:\\Users\\lanli\\project\\Hotel_WillGitHub\\HotelBookingSystem(12.17will)\\HotelBookingSystem\\Controllers\\FQAController.cs",
-              "RelativeToolTip": "HotelBookingSystem\\Controllers\\FQAController.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAAAwCAAAABMAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\lanli\\project\\Hotel_WillGitHub\\HotelBookingSystem(12.17will)\\HotelBookingSystem\\Controllers\\FQAController.cs*",
+              "RelativeToolTip": "HotelBookingSystem\\Controllers\\FQAController.cs*",
+              "ViewState": "AgIAAA4AAAAAAAAAAADwvysAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-19T10:26:54.285Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Users\\lanli\\project\\Hotel_WillGitHub\\HotelBookingSystem(12.17will)\\HotelBookingSystem\\Views\\FQA\\Index.cshtml",
               "RelativeDocumentMoniker": "HotelBookingSystem\\Views\\FQA\\Index.cshtml",
               "ToolTip": "C:\\Users\\lanli\\project\\Hotel_WillGitHub\\HotelBookingSystem(12.17will)\\HotelBookingSystem\\Views\\FQA\\Index.cshtml",
               "RelativeToolTip": "HotelBookingSystem\\Views\\FQA\\Index.cshtml",
-              "ViewState": "AgIAAGQAAAAAAAAAAAAQwHoAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAFgAAAAAAAAAAAAQwHoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-12-19T10:23:56.296Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-19T10:23:56.296Z"
             },
             {
               "$type": "Document",
