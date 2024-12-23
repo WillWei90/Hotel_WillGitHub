@@ -16,6 +16,7 @@ namespace HotelBookingSystem.Models
         public string Address { get; set; }
         public string RoomContent { get; set; }
         public bool Activate { get; set; }
+        public byte[] ProfilePicture { get; set; }
 
         // 分頁屬性
         [NotMapped]
