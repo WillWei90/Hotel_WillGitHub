@@ -234,11 +234,11 @@
 
 <script>
 
-    function loadEditRoom(roomNo, roomName, price, roomType, address, roomContent, activate) {
-        console.log("Loading room data...");
-        console.log({ roomNo, roomName, price, roomType, address, roomContent, activate });
+    function loadEditRoom(roomNo, roomName, price, roomType, address, roomContent, activate, profilePicture) {
+        console.log("加载房间数据：", { roomNo, roomName, price, roomType, address, roomContent, activate });
 
-        // 將數據填充到模態框內的表單字段
+
+        // 填充表单字段
         document.getElementById("EditRoomNo").value = roomNo;
         document.getElementById("EditRoomName").value = roomName;
         document.getElementById("EditPrice").value = price;
@@ -251,6 +251,11 @@
         const activateLabel = document.getElementById("activateLabel");
         activateCheckbox.checked = activate === true; // 確保布林值正確
         activateLabel.textContent = activate ? "啟用" : "停用";
+
+        // 设置默认图片值
+        const profilePictureDefault = document.getElementById("EditProfilePictureDefault");
+        profilePictureDefault.value = profilePicture ? `data:image/png;base64,${profilePicture}` : "";
+
     }
 
     // 當開關狀態改變時，更新標籤文字
@@ -258,6 +263,7 @@
         const label = document.getElementById("activateLabel");
         label.textContent = this.checked ? "啟用" : "停用";
     });
+
 
     // 如果有 TempData 消息則顯示模態框
     window.onload = function () {
