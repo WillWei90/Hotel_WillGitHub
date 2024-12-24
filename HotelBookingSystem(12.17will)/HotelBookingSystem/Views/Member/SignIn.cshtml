@@ -66,13 +66,23 @@
         <!-- 帳號輸入區 -->
         <div class="form-group">
             <label for="UserName">帳號：</label>
-            @Html.TextBoxFor(m => m.UserName, new { @id = "UserName", placeholder = "輸入帳號", @class = "input-box" })
+            @Html.TextBoxFor(m => m.UserName, new {
+                @id = "UserName", 
+                placeholder = "輸入帳號", 
+                @class = "input-box",
+                required = "required"
+            })
         </div>
 
         <!-- 密碼輸入區 -->
         <div class="form-group">
             <label for="Password">密碼：</label>
-            @Html.PasswordFor(m => m.Password, new { @id = "Password", placeholder = "輸入密碼", @class = "input-box" })
+            @Html.PasswordFor(m => m.Password, new {
+                @id = "Password", 
+                placeholder = "輸入密碼", 
+                @class = "input-box",
+                required = "required"
+            })
         </div>
 
         <!-- 顯示錯誤訊息 -->

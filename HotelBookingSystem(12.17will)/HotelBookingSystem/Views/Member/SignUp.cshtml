@@ -101,7 +101,8 @@
                        name="Birthday"
                        class="form-control"
                        max="@DateTime.Today.AddYears(-20).ToString("yyyy-MM-dd")"
-                       value="@(ViewData["ValidBirthday"] ?? "")" />
+                       value="@(ViewData["ValidBirthday"] ?? "")" 
+                       placeholder="西元年/月/日" />
                 <span asp-validation-for="Birthday" class="text-danger"></span>
                 <small class="form-text text-muted">必須年滿20歲才能註冊</small>
             </div>
@@ -119,6 +120,7 @@
 }
 }-->
 @section scripts {
+    <partial name="_ValidationScriptsPartial" />
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script>
         //當使用者在帳號輸入欄位輸入內容時, 會觸發 AJAX 請求檢查帳號是否已存在

@@ -46,6 +46,13 @@ namespace HotelBookingSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> SignIn(MemberAccount user)
         {
+            // 檢查輸入是否為空
+            if (string.IsNullOrEmpty(user.UserName) || string.IsNullOrEmpty(user.Password))
+            {
+                ViewData["result"] = "請輸入帳號和密碼";
+                return View(user);
+            }
+
             // 初始化資料庫連線並獲取帳號列表
             MemberConnection connection = new MemberConnection();
             List<MemberAccount> accounts = connection.getAccounts();
@@ -128,6 +135,12 @@ namespace HotelBookingSystem.Controllers
         public IActionResult SignUp(MemberAccount user)
         {
             MemberConnection member = new MemberConnection();
+
+            // 驗證模型狀態是否有效
+            if (!ModelState.IsValid)
+            {
+                return View(user);
+            }
 
             // 可以在 newAccount 方法前檢查
             if (member.IsUserNameExists(user.UserName))
@@ -212,7 +225,7 @@ namespace HotelBookingSystem.Controllers
             if (userExists)
             {
                 Console.WriteLine("帳號已存在");
-                return Json("帳號已存在");
+                return Json("帳號已存在, 請使用其他信箱註冊");
             }
 
             else
@@ -328,6 +341,12 @@ namespace HotelBookingSystem.Controllers
                     return BadRequest(new { success = false, message = "目前密碼不正確" });
                 }
 
+                // 檢查新密碼是否與當前密碼相同
+                if (PasswordHelper.VerifyPassword(model.NewPassword, user.Password))
+                {
+                    return BadRequest(new { success = false, message = "新密碼不能與目前密碼相同" });
+                }
+
                 // 更新密碼
                 user.Password = PasswordHelper.HashPassword(model.NewPassword);
                 _context.MemberAccounts.Update(user);
@@ -375,10 +394,13 @@ namespace HotelBookingSystem.Controllers
                     return BadRequest(new { success = false, message = "目前電話不正確" });
                 }
 
-                if (model.NewPhone != model.ConfirmPhone)
+                // 檢查新電話是否與當前電話相同
+                if (model.NewPhone == model.CurrentPhone)
                 {
-                    return BadRequest(new { success = false, message = "新電話與確認電話不一致" });
+                    return BadRequest(new { success = false, message = "新電話不能與目前電話相同" });
                 }
+
+                
 
                 user.Phone = model.NewPhone;
                 _context.MemberAccounts.Update(user);

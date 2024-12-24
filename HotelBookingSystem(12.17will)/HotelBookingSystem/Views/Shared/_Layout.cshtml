@@ -13,7 +13,7 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 
-    <title>飯店</title>
+    <title>LazzyDog Hotel</title>
 
 
     <!-- bootstrap core css -->
@@ -50,6 +50,24 @@
         body {
             margin-bottom: 50px; /* 增加與 footer 的距離，確保內容不被遮蓋 */
         }
+
+        .navbar-brand span {
+            font-size: 30px; /* 字體大小 */
+            font-family: 'Playfair Display', serif; /* 指定字型 */
+            font-weight: bold; /* 加粗 */
+            letter-spacing: 1px; /* 增加字距 */
+            color: #333; /* 字體顏色 */
+        }
+
+        .navbar-nav .nav-link {
+            font-size: 20px; /* 字體大小 */
+            font-family: 'Poppins', sans-serif; /* 字體樣式 */
+            font-weight: 600; /* 字體加粗 */
+        }
+
+            .navbar-nav .nav-link:hover {
+                text-decoration: underline; /* 滑鼠懸停效果 */
+            }
     </style>
 
     @RenderSection("styles", required: false)
@@ -61,9 +79,13 @@
         <!-- Header Section -->
         <header class="header_section long_section px-0">
             <nav class="navbar navbar-expand-lg custom_nav-container ">
-                <a class="navbar-brand" href="~/Home/Index">
-                    <span>飯店</span>
+                <a class="navbar-brand" href="~/Member/Index">
+                    <img src="@Url.Content("~/images/dog-icon.png")" alt="LazzyDog"
+                         style="width: 70px; height: 70px; margin-right: 10px;">
+                    <span>Lazzy Dog Hotel</span>
                 </a>
+                <!--FontStyle-->
+                <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class=""> </span>
                 </button>
@@ -135,7 +157,8 @@
                                         <div id="passwordFields" style="display: none;">
                                             <div class="form-group">
                                                 <label for="currentPassword">目前密碼</label>
-                                                <input type="password" class="form-control" id="currentPassword" name="CurrentPassword" placeholder="目前密碼">
+                                                <input type="password" class="form-control" id="currentPassword" name="CurrentPassword" 
+                                                       placeholder="目前密碼">
                                             </div>
                                             <div class="form-group">
                                                 <label for="newPassword">新密碼</label>
@@ -146,7 +169,9 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="confirmPassword">確認新密碼</label>
-                                                <input type="password" class="form-control" id="confirmPassword" name="ConfirmPassword" placeholder="再次輸入新密碼">
+                                                <input type="password" class="form-control" id="confirmPassword" name="ConfirmPassword" 
+                                                       placeholder="再次輸入新密碼">
+                                                <div class="invalid-feedback" id="confirmPasswordError"></div>
                                             </div>
                                         </div>
 
@@ -154,7 +179,8 @@
                                         <div id="phoneFields" style="display: none;">
                                             <div class="form-group">
                                                 <label for="currentPhone">目前電話</label>
-                                                <input type="text" class="form-control" id="currentPhone" name="CurrentPhone" pattern="^09\d{8}$" placeholder="目前電話">
+                                                <input type="text" class="form-control" id="currentPhone" name="CurrentPhone" pattern="^09\d{8}$" 
+                                                       placeholder="目前電話">
                                             </div>
                                             <div class="form-group">
                                                 <label for="newPhone">新電話</label>
@@ -164,7 +190,9 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="confirmPhone">確認新電話</label>
-                                                <input type="text" class="form-control" id="confirmPhone" name="ConfirmPhone" pattern="^09\d{8}$" placeholder="再次輸入新電話">
+                                                <input type="text" class="form-control" id="confirmPhone" name="ConfirmPhone" pattern="^09\d{8}$" 
+                                                       placeholder="再次輸入新電話">
+                                                <div class="invalid-feedback" id="confirmPhoneError"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -192,7 +220,7 @@
         <div class="container text-center">
             <p>
                 &copy; <span id="displayYear"></span> 網頁來源
-                <a href="https://html.design/">飯店</a>
+                <a href="https://html.design/">LazzyDogHotel</a>
             </p>
         </div>
     </footer>
@@ -267,8 +295,16 @@
                 $('.is-invalid').removeClass('is-invalid');
                 $('.invalid-feedback').text('');
 
+                const currentPassword = $('#currentPassword').val();
                 const newPassword = $('#newPassword').val();
                 const confirmPassword = $('#confirmPassword').val();
+
+                // 檢查新密碼是否與目前密碼相同
+                if (newPassword === currentPassword) {
+                    $('#newPassword').addClass('is-invalid');
+                    $('#newPasswordError').text('新密碼不能與目前密碼相同');
+                    return;
+                }
 
                 // 檢查密碼格式
                 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
@@ -308,8 +344,16 @@
                 $('.is-invalid').removeClass('is-invalid');
                 $('.invalid-feedback').text('');
 
+                const currentPhone = $('#currentPhone').val();
                 const newPhone = $('#newPhone').val();
                 const confirmPhone = $('#confirmPhone').val();
+
+                // 檢查新電話是否與目前電話相同
+                if (newPhone === currentPhone) {
+                    $('#newPhone').addClass('is-invalid');
+                    $('#newPhoneError').text('新電話不能與目前電話相同');
+                    return;
+                }
 
                 // 檢查電話格式
                 const phoneRegex = /^09\d{8}$/;
@@ -355,12 +399,18 @@
                         } else if (error.toLowerCase().includes('newpassword')) {
                             $('#newPassword').addClass('is-invalid');
                             $('#newPasswordError').text(error);
+                        } else if (error.toLowerCase().includes('confirmpassword')) {  // 加入這個條件
+                            $('#confirmPassword').addClass('is-invalid');
+                            $('#confirmPasswordError').text(error);
                         } else if (error.toLowerCase().includes('currentphone')) {
                             $('#currentPhone').addClass('is-invalid');
                             $('#currentPhoneError').text(error);
                         } else if (error.toLowerCase().includes('newphone')) {
                             $('#newPhone').addClass('is-invalid');
                             $('#newPhoneError').text(error);
+                        } else if (error.toLowerCase().includes('confirmphone')) {  // 加入這個條件
+                            $('#confirmPhone').addClass('is-invalid');
+                            $('#confirmPhoneError').text(error);
                         }
                     });
                 } else if (response.message) {

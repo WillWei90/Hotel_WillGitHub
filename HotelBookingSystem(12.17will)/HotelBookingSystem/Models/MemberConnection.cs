@@ -57,6 +57,14 @@ namespace HotelBookingSystem.Models
         //資料庫寫入
         public void newAccount(MemberAccount user)
         {
+            if (string.IsNullOrEmpty(user.UserName) ||
+                string.IsNullOrEmpty(user.Password) ||
+                string.IsNullOrEmpty(user.Phone) ||
+                user.Birthday == default)
+            {
+                throw new ArgumentException("註冊資料不可為空");
+            }
+
             //string myMemberNo = user.MemberNo;
             string myUserName = user.UserName;
             string myPassword = user.Password;
