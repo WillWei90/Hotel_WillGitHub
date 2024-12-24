@@ -233,4 +233,3 @@ namespace HotelBookingSystem.Controllers
     }
 }
 
-
