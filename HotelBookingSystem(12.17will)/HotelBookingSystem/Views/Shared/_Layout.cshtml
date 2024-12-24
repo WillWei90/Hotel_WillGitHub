@@ -139,7 +139,10 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="newPassword">新密碼</label>
-                                                <input type="password" class="form-control" id="newPassword" name="NewPassword" placeholder="新密碼至少8字元且有一個字母和一個數字">
+                                                <input type="password" class="form-control" id="newPassword" name="NewPassword" 
+                                                       placeholder="新密碼至少8字元且有一個字母和一個數字"
+                                                       pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$">
+                                                <div class="invalid-feedback" id="newPasswordError"></div>
                                             </div>
                                             <div class="form-group">
                                                 <label for="confirmPassword">確認新密碼</label>
@@ -155,7 +158,9 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="newPhone">新電話</label>
-                                                <input type="text" class="form-control" id="newPhone" name="NewPhone" pattern="^09\d{8}$" placeholder="新電話">
+                                                <input type="text" class="form-control" id="newPhone" name="NewPhone" pattern="^09\d{8}$" 
+                                                       placeholder="新電話">
+                                                <div class="invalid-feedback" id="newPhoneError"></div>
                                             </div>
                                             <div class="form-group">
                                                 <label for="confirmPhone">確認新電話</label>
@@ -262,10 +267,18 @@
                 $('.is-invalid').removeClass('is-invalid');
                 $('.invalid-feedback').text('');
 
-                // 檢查密碼一致性
                 const newPassword = $('#newPassword').val();
                 const confirmPassword = $('#confirmPassword').val();
 
+                // 檢查密碼格式
+                const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+                if (!passwordRegex.test(newPassword)) {
+                    $('#newPassword').addClass('is-invalid');
+                    $('#newPasswordError').text('密碼至少8個字元且至少一個字母和一個數字');
+                    return;
+                }
+
+                // 檢查密碼一致性
                 if (newPassword !== confirmPassword) {
                     $('#confirmPassword').addClass('is-invalid');
                     $('#confirmPasswordError').text('新密碼和確認密碼不相符');
@@ -295,10 +308,18 @@
                 $('.is-invalid').removeClass('is-invalid');
                 $('.invalid-feedback').text('');
 
-                // 檢查電話一致性
                 const newPhone = $('#newPhone').val();
                 const confirmPhone = $('#confirmPhone').val();
 
+                // 檢查電話格式
+                const phoneRegex = /^09\d{8}$/;
+                if (!phoneRegex.test(newPhone)) {
+                    $('#newPhone').addClass('is-invalid');
+                    $('#newPhoneError').text('請輸入有效的台灣手機號碼');
+                    return;
+                }
+
+                // 檢查電話一致性
                 if (newPhone !== confirmPhone) {
                     $('#confirmPhone').addClass('is-invalid');
                     $('#confirmPhoneError').text('新電話和確認電話不相符');
