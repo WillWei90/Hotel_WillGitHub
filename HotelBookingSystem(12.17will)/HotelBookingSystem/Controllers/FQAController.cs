@@ -33,19 +33,20 @@ namespace HotelBookingSystem.Controllers
 
             // 分頁查詢
             var qaList = _context.QAs
-                .OrderByDescending(q => q.CreateTime) // 按創建時間降序排列
+            .OrderByDescending(q => q.CreateTime) // 按創建時間降序排列
                 .Skip((page - 1) * PageSize) // 跳過前面頁數的項目
                 .Take(PageSize) // 取得當前頁的項目
-                .Select(q => new QA
-                {
-                    QaNo = q.QaNo,
-                    CreateTime = q.CreateTime,
-                    Question = q.Question ?? "無內容",
-                    Answer = q.Answer ?? "尚未回覆",
-                    Name = q.Name ?? "未知",
-                    Solve = q.Solve
-                })
-                .ToList();
+            .Select(q => new QA
+            {
+                QaNo = q.QaNo,
+                CreateTime = q.CreateTime, // 加入創建時間
+                Question = q.Question ?? "無內容",
+                Answer = q.Answer ?? "尚未回覆",
+                Name = q.Name ?? "未知",
+                Solve = q.Solve
+
+            })
+            .ToList(); ;
 
             // 將分頁資訊傳送到 View
             ViewBag.CurrentPage = page;
@@ -53,6 +54,8 @@ namespace HotelBookingSystem.Controllers
 
             return View(qaList);
         }
+
+
 
         // 顯示 QA 詳細資訊
         public ActionResult Details(string id)
@@ -72,7 +75,7 @@ namespace HotelBookingSystem.Controllers
         }
 
 
-        // 新增 QA - POST 
+        // 新增 QA - POST
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(string Question)
@@ -96,11 +99,13 @@ namespace HotelBookingSystem.Controllers
             };
 
             _context.QAs.Add(newQa);
-            _context.SaveChanges();
+                _context.SaveChanges();
 
-            return RedirectToAction("Index");
+                return RedirectToAction("Index");
+            }
+
+            return View(qa);
         }
-
 
         // 編輯 QA - GET
         public ActionResult Edit(string id)
