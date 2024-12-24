@@ -1,40 +1,55 @@
-# 忽略編譯後的輸出資料夾
+# 编译输出文件夹
 bin/
 obj/
-Release/
 Debug/
+Release/
 
-# 忽略 Visual Studio 產生的檔案
+# Visual Studio 文件
+.vs/
 *.suo
 *.user
 *.userosscache
 *.sln.docstates
-.vs/
 
-# 忽略組件輸出檔案
-*.dll
-*.exe
-*.pdb
-*.cache
-*.json
-*.ref*
+# Rider/JetBrains 文件
+.idea/
+*.iml
 
-# 忽略備份檔案
-*.bak
+# 发布配置文件
+*.pubxml
+*.pubxml.user
+*.publishproj
+
+# 临时文件
 *.tmp
-
-# 忽略其他暫存檔案
-~*
+*.bak
+*.swp
 *.log
+*.pdb
 
-# 忽略整個 obj 目錄
-**/obj/
+# 本地开发配置
+.env
+.env.*.local
 
-# 忽略 AssemblyInfo 相關檔案
-**/AssemblyInfo.*
-**/RazorAssemblyInfo.*
+# Node.js 依赖文件夹
+node_modules/
 
-**/*.pubxml
-**/*.pubxml.user
-**/*.publishproj
-**/*.csproj.user
+# npm 缓存
+*.npm-debug.log
+*.yarn-debug.log
+*.yarn-error.log
+
+# ASP.NET Core 文件
+wwwroot/appsettings.json
+appsettings.*
+appsettings.Development.json
+
+# macOS 系统文件
+.DS_Store
+
+# Windows 系统文件
+Thumbs.db
+desktop.ini
+
+# Linux 系统文件
+*.swp
