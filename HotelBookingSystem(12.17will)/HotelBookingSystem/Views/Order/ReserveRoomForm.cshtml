@@ -54,6 +54,11 @@
                                required />
                     </div>
                 </div>
+                <div class="text-center">
+                    <button type="button" class="btn btn-info" id="check-availability">點擊查看已被訂日</button>
+                </div>
+                <div id="availability-dates" class="mt-3 text-center"></div>
+                <div id="calendar" class="mt-4"></div>
                 <div class="text-center mt-3">
                     <button type="submit" class="btn btn-primary">確認預訂</button>
                 </div>
@@ -63,8 +68,74 @@
 </div>
 
 @section Scripts {
+    <!-- FullCalendar 引入 -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            const checkAvailabilityButton = document.getElementById("check-availability");
+            const availabilityDatesDiv = document.getElementById("availability-dates");
+            const calendarEl = document.getElementById("calendar");
+            const roomNo = document.getElementById("RoomNo").value;
+
+            // 初始化 FullCalendar
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'zh-tw',
+                events: [] // 初始化為空
+            });
+
+            calendar.render();
+
+            // 點擊 "查看已被訂日" 按鈕
+            if (checkAvailabilityButton) {
+                checkAvailabilityButton.addEventListener("click", function () {
+                    checkAvailabilityButton.disabled = true;
+                    checkAvailabilityButton.textContent = "加載中...";
+
+                    fetch(`/Order/CheckRoomAvailability/${roomNo}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                const bookings = data.bookings || [];
+                                if (bookings.length > 0) {
+                                    // 更新 FullCalendar 的事件
+                                    calendar.removeAllEvents();
+                                    bookings.forEach(date => {
+                                        calendar.addEvent({
+                                            title: '已預訂',
+                                            start: date,
+                                            display: 'background',
+                                            backgroundColor: '#ffcccc'
+                                        });
+                                    });
+
+                                    availabilityDatesDiv.innerHTML = `
+                                        <p class="text-success">以下日期已被預訂，請選擇其他日期。</p>
+                                        <ul>
+                                            ${bookings.map(date => `<li>${date}</li>`).join("")}
+                                        </ul>
+                                    `;
+                                } else {
+                                    availabilityDatesDiv.innerHTML = "<p>該房間目前完全可用。</p>";
+                                    calendar.removeAllEvents(); // 清空事件
+                                }
+                            } else {
+                                availabilityDatesDiv.innerHTML = `<p class="text-danger">${data.message || "無法檢查房間可用性。"}</p>`;
+                            }
+                        })
+                        .catch(() => {
+                            availabilityDatesDiv.innerHTML = "<p class='text-danger'>檢查房間可用性時發生錯誤，請稍後再試！</p>";
+                        })
+                        .finally(() => {
+                            checkAvailabilityButton.disabled = false;
+                            checkAvailabilityButton.textContent = "查看已被訂日";
+                        });
+                });
+            }
+
+            // 動態調整入住與退房日期
             const startDateInput = document.getElementById("StartDate");
             const endDateInput = document.getElementById("EndDate");
 
