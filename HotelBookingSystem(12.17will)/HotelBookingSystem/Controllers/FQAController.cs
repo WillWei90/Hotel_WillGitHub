@@ -75,7 +75,7 @@ namespace HotelBookingSystem.Controllers
         }
 
 
-        // 新增 QA - POST
+        // 新增 QA - POST 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(string Question)
@@ -99,13 +99,11 @@ namespace HotelBookingSystem.Controllers
             };
 
             _context.QAs.Add(newQa);
-                _context.SaveChanges();
+            _context.SaveChanges();
 
-                return RedirectToAction("Index");
-            }
-
-            return View(qa);
+            return RedirectToAction("Index");
         }
+
 
         // 編輯 QA - GET
         public ActionResult Edit(string id)
