@@ -1,0 +1,139 @@
+﻿@{
+    ViewData["Title"] = "SignIn Page";
+}
+
+@model MemberAccount
+
+@section styles{
+    <style>
+        .login-container {
+            position: absolute; /* 絕對定位，方便放置於視窗中央 */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* 將容器的中心點對齊到視窗中心 */
+            width: 400px; /* 設定表單寬度 */
+            padding: 20px; /* 增加內部空間 */
+            background-color: #fff; /* 背景色 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 加陰影增加層次感 */
+            border-radius: 8px; /* 圓角邊框 */
+            text-align: center; /* 內容置中 */
+        }
+
+            .login-container .form-group {
+                display: flex; /* 使用 Flexbox 使 label 和 input 水平排列 */
+                align-items: center; /* 垂直方向置中對齊 */
+                margin-bottom: 15px; /* 增加每組輸入框的間距 */
+                justify-content: center; /* 將按鈕置中 */
+            }
+
+            .login-container label {
+                width: 80px; /* 固定 label 寬度 */
+                text-align: right; /* 文字靠右對齊 */
+                margin-right: 10px; /* 與輸入框保持適當距離 */
+            }
+
+            .login-container input {
+                flex: 1; /* 讓輸入框自適應剩餘空間 */
+                padding: 8px;
+                box-sizing: border-box; /* 包括內邊距和邊框 */
+            }
+
+            .login-container .btn-submit {
+                
+                padding: 10px 20px;
+                background-color: #007bff;
+                color: #fff;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+                .login-container button:hover {
+                    background-color: #0056b3;
+                }
+
+            .login-container p {
+                margin-top: 12px;
+            }
+    </style>
+}
+
+<div class="login-container">
+    <h2>登入</h2>
+
+    @using (Html.BeginForm("SignIn", "Member", FormMethod.Post))
+    {
+        <!-- 帳號輸入區 -->
+        <div class="form-group">
+            <label for="UserName">帳號：</label>
+            @Html.TextBoxFor(m => m.UserName, new { @id = "UserName", placeholder = "輸入帳號", @class = "input-box" })
+        </div>
+
+        <!-- 密碼輸入區 -->
+        <div class="form-group">
+            <label for="Password">密碼：</label>
+            @Html.PasswordFor(m => m.Password, new { @id = "Password", placeholder = "輸入密碼", @class = "input-box" })
+        </div>
+
+        <!-- 顯示錯誤訊息 -->
+        @if (ViewData["result"] != null)
+        {
+            <div style="color: red; margin-top: 10px;">@ViewData["result"]</div>
+        }
+
+        <!-- 按鈕區 -->
+        <div class="form-group">
+            <button type="submit" id="bt1" class="btn-submit">登入</button>
+        </div>
+    }
+
+    <!-- 註冊連結 -->
+    <div>
+        <p>@Html.ActionLink("新增帳戶", "SignUp") | @Html.ActionLink("忘記密碼", "ForgotPassword")</p>
+    </div>
+</div>
+
+@if (TempData["SignOutMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SignOutMessage"]
+    </div>
+}
+
+<!--顯示提示的小彈窗-->
+<div id="signInAlert" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="signInAlertLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="signInAlertLabel">請重新登入</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>由於您已更新密碼或電話號碼，請重新登入以繼續使用。</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">確認</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            const params = new URLSearchParams(window.location.search);
+
+            if (params.has('forceSignOut')) {
+                $('#signInAlert').modal('show');
+
+                // 綁定按鈕的關閉事件，確保可以正常關閉模態框
+                $('#signInAlert .btn-primary, #signInAlert .close').on('click', function () {
+                    $('#signInAlert').modal('hide');
+                });
+            }
+        });
+    </script>
+}

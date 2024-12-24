@@ -1,0 +1,38 @@
+﻿@model HotelBookingSystem.Models.OrderDetailsViewModel
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">訂單詳情</h2>
+
+    <div class="card shadow p-4">
+        <div class="mb-3">
+            <h5 class="card-title">訂單資訊</h5>
+        </div>
+
+        <p><strong>訂單編號：</strong> @Model.OrderNo</p>
+        <p><strong>房間名稱：</strong> @Model.RoomName</p>
+        <p><strong>價格：</strong> @Model.Price.ToString("C")（每晚）</p>
+        <p><strong>入住日期：</strong> @Model.StartDate.ToString("yyyy-MM-dd")</p>
+        <p><strong>退房日期：</strong> @Model.EndDate.ToString("yyyy-MM-dd")</p>
+        <p><strong>是否付款：</strong> @(Model.IsPay ? "是" : "否")</p>
+        <p><strong>取消狀態：</strong> @(Model.Cancel ? "已取消" : "確認訂房")</p>
+        <p><strong>總金額：</strong> @Model.TotalAmount.ToString("C")</p>
+
+        @if (!Model.Cancel)
+        {
+            <form asp-action="CancelOrder" asp-controller="Order" method="post" class="mt-4">
+                <input type="hidden" name="orderNo" value="@Model.OrderNo" />
+                <button type="submit" class="btn btn-danger w-100">取消訂單</button>
+            </form>
+        }
+        else
+        {
+            <div class="text-center mt-4">
+                <p class="text-muted">此訂單已取消。</p>
+            </div>
+        }
+
+        <div class="text-center mt-4">
+            <a href="@Url.Action("OrderList", "Order")" class="btn btn-primary w-100">返回訂單列表</a>
+        </div>
+    </div>
+</div>
