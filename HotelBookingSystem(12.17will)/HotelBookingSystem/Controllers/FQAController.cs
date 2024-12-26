@@ -10,7 +10,7 @@ namespace HotelBookingSystem.Controllers
     public class FQAController : Controller
     {
         private readonly HotelDbContext _context;
-        private const int PageSize = 10; // 每頁顯示的項目數
+        private const int PageSize = 5; // 每頁顯示的項目數
 
         // 使用建構函式注入 HotelDbContext
         public FQAController(HotelDbContext context)
@@ -33,20 +33,20 @@ namespace HotelBookingSystem.Controllers
 
             // 分頁查詢
             var qaList = _context.QAs
-            .OrderByDescending(q => q.CreateTime) // 按創建時間降序排列
+                .OrderByDescending(q => q.CreateTime) // 按創建時間降序排列
                 .Skip((page - 1) * PageSize) // 跳過前面頁數的項目
                 .Take(PageSize) // 取得當前頁的項目
-            .Select(q => new QA
-            {
-                QaNo = q.QaNo,
-                CreateTime = q.CreateTime, // 加入創建時間
-                Question = q.Question ?? "無內容",
-                Answer = q.Answer ?? "尚未回覆",
-                Name = q.Name ?? "未知",
-                Solve = q.Solve
-
-            })
-            .ToList(); ;
+                .Select(q => new QA
+                {
+                    QaNo = q.QaNo,
+                    CreateTime = q.CreateTime,
+                    Question = q.Question ?? "無內容",
+                    Answer = q.Answer ?? "尚未回覆",
+                    Name = q.Name ?? "未知",
+                    Solve = q.Solve,
+                    ReplyTime = q.ReplyTime 
+                })
+                .ToList();
 
             // 將分頁資訊傳送到 View
             ViewBag.CurrentPage = page;
@@ -54,8 +54,6 @@ namespace HotelBookingSystem.Controllers
 
             return View(qaList);
         }
-
-
 
         // 顯示 QA 詳細資訊
         public ActionResult Details(string id)
@@ -93,6 +91,7 @@ namespace HotelBookingSystem.Controllers
             var newQa = new QA
             {
                 QaNo = newQaNo,
+                QuestionNo = newQaNo,
                 Question = Question,
                 CreateTime = DateTime.Now,
                 Solve = false // 預設未解決
