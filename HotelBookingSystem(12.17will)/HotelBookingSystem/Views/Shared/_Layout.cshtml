@@ -240,7 +240,7 @@
             document.getElementById('phoneFields').style.display = option === 'phone' ? 'block' : 'none';
         });
     </script>
-    changeOption
+    
     <script> //改密碼或電話用的script
         $(document).ready(function () {
             $('#changeInfoForm').on('submit', function (e) {
@@ -290,9 +290,49 @@
                 }
             }
 
+            $('#newPassword').on('input', function () {
+                const newPassword = $(this).val();
+                const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
+                if (newPassword === '') {
+                    // 清空時恢復預設狀態
+                    $(this).removeClass('is-invalid').removeClass('border-success');
+                    $('#newPasswordError').text('');
+                } else if (passwordRegex.test(newPassword)) {
+                    // 符合格式時顯示綠色邊框
+                    $(this).removeClass('is-invalid').addClass('border-success');
+                    $('#newPasswordError').text('');
+                } else {
+                    // 不符合格式時顯示紅色邊框和錯誤訊息
+                    $(this).addClass('is-invalid').removeClass('border-success');
+                    $('#newPasswordError').text('密碼至少8字元且有一個字母和一個數字');
+                }
+            });
+
+            $('#newPhone').on('input', function () {
+                const newPhone = $(this).val();
+                const phoneRegex = /^09\d{8}$/;
+
+                if (newPhone === '') {
+                    // 清空時恢復預設狀態
+                    $(this).removeClass('is-invalid').removeClass('border-success');
+                    $('#newPhoneError').text('');
+                } else if (phoneRegex.test(newPhone)) {
+                    // 符合格式時顯示綠色邊框
+                    $(this).removeClass('is-invalid').addClass('border-success');
+                    $('#newPhoneError').text('');
+                } else {
+                    // 不符合格式時顯示紅色邊框和錯誤訊息
+                    $(this).addClass('is-invalid').removeClass('border-success');
+                    $('#newPhoneError').text('請輸入有效手機號碼');
+                }
+            });
+
+
             function handleChangePassword() {
-                // 清除之前的錯誤
+                // 清除之前的錯誤和成功樣式
                 $('.is-invalid').removeClass('is-invalid');
+                $('.border-success').removeClass('border-success');
                 $('.invalid-feedback').text('');
 
                 const currentPassword = $('#currentPassword').val();
@@ -301,7 +341,7 @@
 
                 // 檢查新密碼是否與目前密碼相同
                 if (newPassword === currentPassword) {
-                    $('#newPassword').addClass('is-invalid');
+                    $('#newPassword').addClass('is-invalid').removeClass('border-success');
                     $('#newPasswordError').text('新密碼不能與目前密碼相同');
                     return;
                 }
@@ -309,14 +349,14 @@
                 // 檢查密碼格式
                 const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
                 if (!passwordRegex.test(newPassword)) {
-                    $('#newPassword').addClass('is-invalid');
-                    $('#newPasswordError').text('密碼至少8個字元且至少一個字母和一個數字');
+                    $('#newPassword').addClass('is-invalid').removeClass('border-success');
+                    $('#newPasswordError').text('密碼至少8字元且至少一個字母和一個數字');
                     return;
                 }
 
                 // 檢查密碼一致性
                 if (newPassword !== confirmPassword) {
-                    $('#confirmPassword').addClass('is-invalid');
+                    $('#confirmPassword').addClass('is-invalid').removeClass('border-success');
                     $('#confirmPasswordError').text('新密碼和確認密碼不相符');
                     return;
                 }
@@ -340,8 +380,9 @@
             }
 
             function handleChangePhone() {
-                // 清除之前的錯誤
+                // 清除之前的錯誤和成功樣式
                 $('.is-invalid').removeClass('is-invalid');
+                $('.border-success').removeClass('border-success');
                 $('.invalid-feedback').text('');
 
                 const currentPhone = $('#currentPhone').val();
@@ -350,7 +391,7 @@
 
                 // 檢查新電話是否與目前電話相同
                 if (newPhone === currentPhone) {
-                    $('#newPhone').addClass('is-invalid');
+                    $('#newPhone').addClass('is-invalid').removeClass('border-success');
                     $('#newPhoneError').text('新電話不能與目前電話相同');
                     return;
                 }
@@ -358,14 +399,14 @@
                 // 檢查電話格式
                 const phoneRegex = /^09\d{8}$/;
                 if (!phoneRegex.test(newPhone)) {
-                    $('#newPhone').addClass('is-invalid');
-                    $('#newPhoneError').text('請輸入有效的台灣手機號碼');
+                    $('#newPhone').addClass('is-invalid').removeClass('border-success');
+                    $('#newPhoneError').text('請輸入有效手機號碼');
                     return;
                 }
 
                 // 檢查電話一致性
                 if (newPhone !== confirmPhone) {
-                    $('#confirmPhone').addClass('is-invalid');
+                    $('#confirmPhone').addClass('is-invalid').removeClass('border-success');
                     $('#confirmPhoneError').text('新電話和確認電話不相符');
                     return;
                 }

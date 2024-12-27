@@ -54,7 +54,7 @@
     <h2>註冊帳號</h2>
     <br />
 
-    <!--表單讓使用者新增, 表單填完按下新增後, 透過post回到MemberController裡的SignUp(MemberAccount user)-->
+    <!-- 表單讓使用者新增, 表單填完按下新增後, 透過 post 回到 MemberController 裡的 SignUp(MemberAccount user) -->
     <form method="post" action="/Member/SignUp">
         <div class="form-group row">
             <label for="inputUserName" class="col-sm-2">信箱</label>
@@ -64,8 +64,8 @@
                        name="UserName"
                        class="form-control"
                        placeholder="輸入信箱"
-                       value="@(ViewData["ValidUserName"] ?? "")" // 保留有效輸入 />
-                <span asp-validation-for="UserName" id="userNameStatus" class="text-danger"></span>
+                       value="@(ViewData["ValidUserName"] ?? "")" />
+                <span asp-validation-for="UserName" id="userNameStatus" class="text-danger"></span> <!--這行就是給它顯示-->
             </div>
         </div>
         <div class="form-group row">
@@ -75,24 +75,22 @@
                        id="inputPassword"
                        name="Password"
                        class="form-control"
-                       placeholder="密碼至少8字元且有一個字母和一個數字"
-                       // 密碼不保留 />
-                <span asp-validation-for="Password" class="text-danger"></span>
+                       placeholder="密碼至少8字元且有一個字母和一個數字" />
+                <span id="passwordStatus" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group row">
-            <label for="inputName" class="col-sm-2">手機</label>
+            <label for="inputPhone" class="col-sm-2">手機</label>
             <div class="col-sm-10">
                 <input type="text"
                        id="inputPhone"
                        name="Phone"
                        class="form-control"
                        placeholder="輸入手機"
-                       value="@(ViewData["ValidPhone"] ?? "")" // 保留有效輸入 />
-                <span asp-validation-for="Phone" class="text-danger"></span>
+                       value="@(ViewData["ValidPhone"] ?? "")" />
+                <span id="phoneStatus" class="text-danger"></span>
             </div>
         </div>
-
         <div class="form-group row">
             <label for="inputBirthday" class="col-sm-2">生日</label>
             <div class="col-sm-10">
@@ -101,17 +99,18 @@
                        name="Birthday"
                        class="form-control"
                        max="@DateTime.Today.AddYears(-20).ToString("yyyy-MM-dd")"
-                       value="@(ViewData["ValidBirthday"] ?? "")" 
+                       value="@(ViewData["ValidBirthday"] ?? "")"
                        placeholder="西元年/月/日" />
                 <span asp-validation-for="Birthday" class="text-danger"></span>
                 <small class="form-text text-muted">必須年滿20歲才能註冊</small>
             </div>
         </div>
-
         <div class="form-group">
             <button type="submit" id="bt2" class="btn-submit">註冊</button>
         </div>
     </form>
+
+
 </div>
 
 <!--@@section Scripts {
@@ -125,44 +124,149 @@
     <script>
         //當使用者在帳號輸入欄位輸入內容時, 會觸發 AJAX 請求檢查帳號是否已存在
         //根據 AJAX 返回的結果, 會更新 #userNameStatus 元素的文字內容:
-        $("#inputUserName").on("input", function () {
-            var userName = $(this).val();
-            console.log("haha", userName);
-            $.ajax({
-                type: "POST",
-                url: "/Member/OnSubmit",
-                data: JSON.stringify({ UserName: userName }),
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                success: function (result) {
-                    if (result == "帳號已存在") {
-                        $("#userNameStatus").text(result);
-                    } else {
-                        $("#userNameStatus").text(result);
-                    }
-                }
-            });
-        });
+            // Password validation regex
+            const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+            // Phone validation regex
+            const phoneRegex = /^09\d{8}$/;
+            const usernameRegex = /^[a-zA-Z][a-zA-Z0-9._-]*@@[a-zA-Z0-9.-]+\.com$/;
 
-        //在註冊按鈕的 submit 事件中,再次檢查帳號是否已存在,如果不存在則提交表單
-        $("form").submit(function (e) {
-            e.preventDefault();
-            var userName = $("#inputUserName").val();
-            $.ajax({
-                type: "POST",
-                url: "/Member/OnSubmit",
-                data: JSON.stringify({ UserName: userName }),
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                success: function (result) {
-                    if (result == "帳號已存在") {
-                        $("#userNameStatus").text(result);
+            $(document).ready(function() {
+                // Username validation
+                $("#inputUserName").on("input", function() {
+                    const Username = $(this).val();
+                    validateUsername(Username);
+                });
+
+                // Password validation
+                $("#inputPassword").on("input", function() {
+                    const password = $(this).val();
+                    validatePassword(password);
+                });
+
+                // Phone validation
+                $("#inputPhone").on("input", function () {
+                    const Phone = $(this).val();
+                    validatePhone(Phone);
+                });
+
+
+                // Email validation (existing code)
+                // $("#inputUserName").on("input", function() {
+                //     var userName = $(this).val();
+                //     $.ajax({
+                //         type: "POST",
+                //         url: "/Member/OnSubmit",
+                //         data: JSON.stringify({ UserName: userName }),
+                //         contentType: 'application/json; charset=utf-8',
+                //         dataType: 'json',
+                //         success: function(result) {
+                //             if (result == "帳號已存在, 請使用其他信箱註冊") {
+                //                 $("#userNameStatus").text(result);
+                //             } else {
+                //                 $("#userNameStatus").text("電子信箱無效，輸入有效的電子信箱");
+                //             }
+                //         }
+                //     });
+                // });
+
+                // Form submission handler
+                $("form").submit(function(e) {
+                    e.preventDefault();
+
+                    // Get all field values
+                    const userName = $("#inputUserName").val();
+                    const password = $("#inputPassword").val();
+                    const phone = $("#inputPhone").val();
+
+                    // Validate all fields
+                    const isPasswordValid = validatePassword(password);
+                    const isPhoneValid = validatePhone(phone);
+
+                    // Check email availability
+                    $.ajax({
+                        type: "POST",
+                        url: "/Member/OnSubmit",
+                        data: JSON.stringify({ UserName: userName }),
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        success: function(result) {
+                        if (result == "帳號已存在, 請使用其他信箱註冊") {
+                                $("#userNameStatus").text(result);
+                            } else if (!isPasswordValid || !isPhoneValid) {
+                                // Don't submit if password or phone is invalid
+                                return;
+                            } else {
+                                // If all validations pass, submit the form
+                                $("form").off("submit").submit();
+                            }
+                        }
+                    });
+                });
+            });
+
+            // Username validation function
+            function validateUsername(Username) {
+                const usernameStatus = $("#userNameStatus");
+
+                if (!usernameRegex.test(Username)) {
+                    console.log("Validation failed: Invalid username");
+                    usernameStatus.text("電子信箱無效，輸入有效的電子信箱");
+                    usernameStatus.css("color", "red");
+                    $("#inputUserName").css("border", "1px solid red");
+                } else {
+                    console.log("Validation passed: Valid username");
+                    // 當格式正確時，進行 AJAX 檢查
+                    $.ajax({
+                        type: "POST",
+                        url: "/Member/OnSubmit",
+                        data: JSON.stringify({ UserName: Username }),
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        success: function (result) {
+                            if (result == "帳號已存在, 請使用其他信箱註冊") {
+                                usernameStatus.text(result);
+                                usernameStatus.css("color", "red");
+                                $("#inputUserName").css("border", "1px solid red");
+                            } else {
+                                usernameStatus.text("");
+                                $("#inputUserName").css("border", "1px solid green");
+                            }
+                        }
+                    });
+                }
+            }
+            // Password validation function
+            function validatePassword(password) {
+                const passwordStatus = $("#passwordStatus");
+                if (!passwordRegex.test(password)) {
+                    console.log("Validation failed: Invalid password");
+                    passwordStatus.text("密碼至少8字元且有一個字母和一個數字");
+                    passwordStatus.css("color", "red");
+                    $("#inputPassword").css("border", "1px solid red");
+                } else {
+                    console.log("Validation passed: Valid password");
+                    passwordStatus.text("");
+                    $("#inputPassword").css("border", "1px solid green");
+                }
+            }
+
+            // Phone validation function
+            function validatePhone(Phone) {
+                    const phoneStatus = $("#phoneStatus"); // 改用 ID 選擇器
+
+                    console.log("Phone Status Element:", phoneStatus);
+
+                    if (!phoneRegex.test(Phone)) {
+                        console.log("Validation failed: Invalid phone number");
+                        phoneStatus.text("輸入有效手機號碼"); // 顯示錯誤訊息
+                        phoneStatus.css("color", "red");
+                        $("#inputPhone").css("border", "1px solid red");
                     } else {
-                        $("form").off("submit").submit();
+                        console.log("Validation passed: Valid phone number");
+                        phoneStatus.text(""); // 清除錯誤訊息
+                        $("#inputPhone").css("border", "1px solid green");
                     }
                 }
-            });
-        });
     </script>
 
 }
