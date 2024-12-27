@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.SqlTypes;
 using System.Linq;
 using HotelBookingSystem.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -18,11 +17,16 @@ namespace HotelBookingSystem.Controllers
             _context = context;
         }
 
-        // 顯示所有 QA（支援分頁）
+        // 顯示篩選後的 QA（支援分頁）
         public IActionResult Index(int page = 1)
         {
+            // 篩選條件：有回覆時間且已解決
+            var filteredQAs = _context.QAs
+                .Where(q => q.ReplyTime != null && q.Solve)
+                .OrderByDescending(q => q.CreateTime);
+
             // 總資料筆數
-            int totalCount = _context.QAs.Count();
+            int totalCount = filteredQAs.Count();
 
             // 計算總頁數
             int totalPages = (int)Math.Ceiling(totalCount / (double)PageSize);
@@ -32,8 +36,7 @@ namespace HotelBookingSystem.Controllers
             if (page > totalPages) page = totalPages;
 
             // 分頁查詢
-            var qaList = _context.QAs
-                .OrderByDescending(q => q.CreateTime) // 按創建時間降序排列
+            var qaList = filteredQAs
                 .Skip((page - 1) * PageSize) // 跳過前面頁數的項目
                 .Take(PageSize) // 取得當前頁的項目
                 .Select(q => new QA
@@ -44,7 +47,7 @@ namespace HotelBookingSystem.Controllers
                     Answer = q.Answer ?? "尚未回覆",
                     Name = q.Name ?? "未知",
                     Solve = q.Solve,
-                    ReplyTime = q.ReplyTime 
+                    ReplyTime = q.ReplyTime
                 })
                 .ToList();
 
@@ -71,7 +74,6 @@ namespace HotelBookingSystem.Controllers
         {
             return View();
         }
-
 
         // 新增 QA - POST 
         [HttpPost]
@@ -102,7 +104,6 @@ namespace HotelBookingSystem.Controllers
 
             return RedirectToAction("Index");
         }
-
 
         // 編輯 QA - GET
         public ActionResult Edit(string id)
