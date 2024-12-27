@@ -22,7 +22,9 @@ namespace HotelBookingSystem.Models
         [MaxLength(15)]
         [Column("Phone")] // 明確指定資料庫欄位名稱
         public string Phone { get; set; }
+        [Column("Birthday")]
         public DateTime Birthday { get; set; }
+        [Column("JoinDate")]
         public DateTime JoinDate { get; set; }
 
         public ICollection<Order> Orders { get; set; }

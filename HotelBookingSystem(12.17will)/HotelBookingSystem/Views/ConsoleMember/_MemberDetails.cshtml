@@ -1,0 +1,81 @@
+﻿@model HotelBookingSystem.Models.Member
+
+<div class="member-details">
+    <div class="member-photo">
+        <img src="~/images/noimage.jpg" alt="Profile Picture" class="img-fluid rounded-circle" style="max-width: 120px;" />
+    </div>
+    <div class="member-info">
+        <h5 class="card-title">@Model.UserName</h5>
+        <p>
+            <strong>電話:</strong> @Model.Phone <br />
+            <strong>生日:</strong> @Model.Birthday.ToString("yyyy-MM-dd") <br />
+            <strong>會員加入:</strong> @Model.JoinDate.ToString("yyyy-MM-dd") <br />
+        </p>
+    </div>
+</div>
+
+<!-- 按鈕 -->
+<button class="btn btn-info btn-sm mt-3" data-bs-toggle="modal" data-bs-target="#editMemberModal">修改會員資料</button>
+<a href="javascript:void(0);" class="btn btn-secondary btn-sm mt-3" onclick="viewOrders(@Model.MemberNo)">查看訂單</a>
+
+<!-- 訂單顯示區域 -->
+<div id="orderList" class="mt-5" style="display:none;">
+    <h3 class="text-center">訂單列表</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>訂單號</th>
+                <th>房號</th>
+                <th>房名</th>
+                <th>開始日期</th>
+                <th>結束日期</th>
+                <th>付款狀態</th>
+                <th>取消狀態</th>
+            </tr>
+        </thead>
+        <tbody id="orderListContent">
+            <!-- 動態生成訂單內容 -->
+        </tbody>
+    </table>
+    <button class="btn btn-secondary" onclick="hideOrders()">隱藏訂單</button>
+</div>
+
+<!-- 彈跳視窗 -->
+<div class="modal fade" id="editMemberModal" tabindex="-1" aria-labelledby="editMemberModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editMemberModalLabel">編輯會員資料</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- 修改表單 -->
+                <form id="editMemberForm">
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden" name="MemberNo" value="@Model.MemberNo" />
+
+                    <div class="mb-3">
+                        <label for="UserName" class="form-label">會員名稱</label>
+                        <input type="text" class="form-control" id="UserName" name="UserName" value="@Model.UserName" readonly required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="Phone" class="form-label">電話</label>
+                        <input type="text" class="form-control" id="Phone" name="Phone" value="@Model.Phone" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="Birthday" class="form-label">生日</label>
+                        <input type="date" class="form-control" id="Birthday" name="Birthday" value="@Model.Birthday.ToString("yyyy-MM-dd")" readonly required />
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-warning" onclick="resetPassword(@Model.MemberNo)">重置密碼</button>
+                        <button type="button" class="btn btn-primary" onclick="updateMember()">更新資料</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

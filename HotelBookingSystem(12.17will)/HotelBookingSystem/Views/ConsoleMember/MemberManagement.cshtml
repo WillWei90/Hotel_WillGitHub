@@ -20,52 +20,36 @@
         </div>
     </form>
 
-    <!-- 當搜尋結果不為空時顯示會員資料 -->
+    <!-- 搜索結果 -->
     @if (!string.IsNullOrEmpty(ViewBag.SearchTerm) && Model != null && Model.Any())
     {
         <h3 class="mt-4">會員資料</h3>
-        <div class="member-details">
-            <div class="member-photo">
-                <!-- 使用 images/noimage.jpg 當作預設圖片 -->
-                <img src="~/images/noimage.jpg" alt="Profile Picture" class="img-fluid rounded-circle" style="max-width: 120px;" />
+
+        @if (Model.Count() > 1)
+        {
+            <!-- 多筆結果顯示下拉選單 -->
+            <div class="mb-3">
+                <label for="memberSelect" class="form-label">選擇會員:</label>
+                <select id="memberSelect" class="form-select" onchange="loadMemberDetails(this.value)">
+                    <option value="">-- 請選擇會員 --</option>
+                    @foreach (var member in Model)
+                    {
+                        <option value="@member.MemberNo">@member.UserName - @member.Phone</option>
+                    }
+                </select>
             </div>
-            <div class="member-info">
-                <h5 class="card-title">@Model.FirstOrDefault().UserName</h5>
-                <p>
-                    <strong>電話:</strong> @Model.FirstOrDefault().Phone <br />
-                    <strong>生日:</strong> @Model.FirstOrDefault().Birthday.ToString("yyyy-MM-dd")<br />
-                    <strong>會員加入:</strong> @Model.FirstOrDefault().JoinDate.ToString("yyyy-MM-dd")<br />
-                </p>
+            <div id="memberDetails" style="display:none;">
+                <!-- 動態顯示會員詳細資料 -->
             </div>
-        </div>
-
-        <!-- 按鈕: 修改會員資料 -->
-        <button class="btn btn-info btn-sm mt-3" data-bs-toggle="modal" data-bs-target="#editMemberModal">修改會員資料</button>
-
-        <!-- 按鈕: 顯示訂單 -->
-        <a href="javascript:void(0);" class="btn btn-secondary btn-sm mt-3" onclick="viewOrders(@Model.FirstOrDefault().MemberNo)">查看訂單</a>
-
-        <!-- 訂單顯示區域 -->
-        <div id="orderList" class="mt-5" style="display:none;">
-            <h3 class="text-center">訂單列表</h3>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>訂單號</th>
-                        <th>房號</th>
-                        <th>房名</th>
-                        <th>開始日期</th>
-                        <th>結束日期</th>
-                        <th>付款狀態</th>
-                        <th>取消狀態</th>
-                    </tr>
-                </thead>
-                <tbody id="orderListContent">
-                    <!-- 動態生成訂單內容 -->
-                </tbody>
-            </table>
-            <button class="btn btn-secondary" onclick="hideOrders()">隱藏訂單</button>
-        </div>
+        }
+        else
+        {
+            <!-- 單筆結果直接顯示 -->
+            var singleMember = Model.First();
+            <div id="memberDetails">
+                @Html.Partial("_MemberDetails", singleMember)
+            </div>
+        }
     }
     else if (string.IsNullOrEmpty(ViewBag.SearchTerm))
     {
@@ -77,47 +61,40 @@
     }
 </div>
 
-<!-- 彈跳視窗 -->
-<div class="modal fade" id="editMemberModal" tabindex="-1" aria-labelledby="editMemberModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editMemberModalLabel">編輯會員資料</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <!-- 修改表單 -->
-                <form id="editMemberForm">
-                    @Html.AntiForgeryToken()
 
-                    <input type="hidden" name="MemberNo" value="@Model.FirstOrDefault().MemberNo" />
 
-                    <div class="mb-3">
-                        <label for="UserName" class="form-label">會員名稱</label>
-                        <input type="text" class="form-control" id="UserName" name="UserName" value="@Model.FirstOrDefault().UserName" readonly required />
-                    </div>
 
-                    <div class="mb-3">
-                        <label for="Phone" class="form-label">電話</label>
-                        <input type="text" class="form-control" id="Phone" name="Phone" value="@Model.FirstOrDefault().Phone" required />
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="Birthday" class="form-label">生日</label>
-                        <input type="date" class="form-control" id="Birthday" name="Birthday" value="@Model.FirstOrDefault().Birthday.ToString("yyyy-MM-dd")" readonly required />
-                    </div>
-
-                    <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-warning" onclick="resetPassword(@Model.FirstOrDefault().MemberNo)">重置密碼</button>
-                        <button type="button" class="btn btn-primary" onclick="updateMember()">更新資料</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 
 <script>
+
+    function loadMemberDetails(memberNo) {
+        if (!memberNo) {
+            document.getElementById("memberDetails").style.display = "none";
+            document.getElementById("memberDetails").innerHTML = "";
+            return;
+        }
+
+        // 發送 Ajax 請求到伺服器
+        fetch(`/ConsoleMember/GetMemberDetails?memberNo=${memberNo}`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.text(); // 將回應作為純文字處理
+            })
+            .then((html) => {
+                // 將 HTML 插入到指定區域
+                const memberDetails = document.getElementById("memberDetails");
+                memberDetails.innerHTML = html;
+                memberDetails.style.display = "block";
+            })
+            .catch((error) => {
+                console.error("Error fetching member details:", error);
+                alert("無法加載會員詳細資料，請稍後再試");
+            });
+    }
+
+
     // 顯示訂單
     function viewOrders(memberNo) {
         fetch(`/ConsoleMember/GetOrdersByMemberNo?memberNo=${memberNo}`)
