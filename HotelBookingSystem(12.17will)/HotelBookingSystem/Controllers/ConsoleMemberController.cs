@@ -30,21 +30,40 @@ namespace HotelBookingSystem.Controllers
 
             if (string.IsNullOrEmpty(ViewBag.UserName))
             {
-                // 如果 Session 中沒有 UserName，重定向到登錄頁面
                 return RedirectToAction("Login", "ConsoleHome");
             }
 
-            var members = _context.Members
-                .Where(m => string.IsNullOrEmpty(searchTerm) ||
-                            m.UserName.Contains(searchTerm) ||
-                            m.Phone.Contains(searchTerm))
-                .Select(m => new Member
+            var members = new List<Member>();
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                if (searchTerm.StartsWith("09") && searchTerm.All(char.IsDigit))
                 {
-                    MemberNo = m.MemberNo,
-                    UserName = m.UserName,
-                    Phone = m.Phone
-                })
-                .ToList();
+                    // 搜索電話號碼
+                    members = _context.Members
+                        .Where(m => m.Phone.Contains(searchTerm))
+                        .Select(m => new Member
+                        {
+                            MemberNo = m.MemberNo,
+                            UserName = m.UserName,
+                            Phone = m.Phone
+                        })
+                        .ToList();
+                }
+                else
+                {
+                    // 搜索用戶名或其他條件
+                    members = _context.Members
+                        .Where(m => m.UserName.Contains(searchTerm) || m.Phone.Contains(searchTerm))
+                        .Select(m => new Member
+                        {
+                            MemberNo = m.MemberNo,
+                            UserName = m.UserName,
+                            Phone = m.Phone
+                        })
+                        .ToList();
+                }
+            }
 
             ViewBag.SearchTerm = searchTerm;
             return View(members);
@@ -139,6 +158,34 @@ namespace HotelBookingSystem.Controllers
 
             return Json(new { success = true, orders });
         }
+
+        [HttpGet("ConsoleMember/GetMemberDetails")]
+        public IActionResult GetMemberDetails(string memberNo)
+        {
+            if (string.IsNullOrEmpty(memberNo))
+            {
+                return BadRequest("會員編號不可為空");
+            }
+
+            // 嘗試將 memberNo 轉換為整數
+            if (!int.TryParse(memberNo, out int memberNoInt))
+            {
+                return BadRequest("會員編號格式不正確");
+            }
+
+            // 使用 LINQ 從資料庫查詢會員資料
+            var member = _context.Members.FirstOrDefault(m => m.MemberNo == memberNoInt); // 查詢邏輯
+            if (member == null)
+            {
+                return NotFound("會員不存在");
+            }
+
+            // 返回部分視圖 (HTML)
+            return PartialView("_MemberDetails", member);
+        }
+
+
+
 
         [HttpPost]
         [Route("ConsoleMember/ResetPassword/{id}")]
