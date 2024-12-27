@@ -33,3 +33,8 @@ Debug/
 # 忽略 AssemblyInfo 相關檔案
 **/AssemblyInfo.*
 **/RazorAssemblyInfo.*
+
+**/*.pubxml
+**/*.pubxml.user
+**/*.publishproj
+**/*.csproj.user
