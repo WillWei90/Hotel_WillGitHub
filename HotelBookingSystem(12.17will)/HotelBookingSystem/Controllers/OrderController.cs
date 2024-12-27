@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using HotelBookingSystem.Models;
+
 using System;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Mail;
+using System.Net;
 
 namespace HotelBookingSystem.Controllers
 {
@@ -131,6 +134,54 @@ namespace HotelBookingSystem.Controllers
             _context.SaveChanges();
 
             TempData["SuccessMessage"] = "預訂成功！可至查詢訂單處查看您的訂單。";
+
+            // **新增郵件寄送邏輯**
+            try
+            {
+                var userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value; // 獲取使用者的 Email
+                if (!string.IsNullOrEmpty(userEmail))
+                {
+                    string subject = "訂房成功通知";
+                    string body = $@"
+                        <html>
+                            <body style='font-family: Arial, sans-serif; font-size: 18px; line-height: 1.6; color: #333;'>
+                                <p>親愛的四季飯店會員您好：</p>
+                                <p>感謝您選擇四季飯店，您的訂房已成功！以下是您的訂房詳細資訊：</p>
+                                <ul>
+                                    <li>訂房編號：{order.OrderNo}</li>
+                                    <li>入住日期：{order.StartDate:yyyy-MM-dd}</li>
+                                    <li>退房日期：{order.EndDate:yyyy-MM-dd}</li>
+                                    <li>房型：{room.RoomName}</li>
+                                    <li>總金額：{order.TotalAmount:C}</li>
+                                </ul>
+                                <p>期待您的光臨！如有任何問題，請隨時與我們聯繫。</p>
+                                <p>四季飯店 敬上</p>
+                            </body>
+                        </html>";
+
+                    using (var client = new SmtpClient("smtp.gmail.com", 587))
+                    {
+                        client.EnableSsl = true;
+                        client.Credentials = new NetworkCredential("hotellazzydog@gmail.com", "lbiu mbvn zdsj zxei");
+
+                        var mailMessage = new MailMessage
+                        {
+                            From = new MailAddress("hotellazzydog@gmail.com", "四季飯店"),
+                            Subject = subject,
+                            Body = body,
+                            IsBodyHtml = true
+                        };
+                        mailMessage.To.Add(userEmail);
+
+                        client.Send(mailMessage);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"訂房成功，但郵件通知失敗：{ex.Message}";
+            }
+
             return RedirectToAction("RoomList");
         }
 
