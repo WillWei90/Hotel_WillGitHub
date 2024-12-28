@@ -9,6 +9,8 @@ using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Mail;
+using System.Net;
 
 namespace HotelBookingSystem.Controllers
 {
@@ -44,6 +46,13 @@ namespace HotelBookingSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> SignIn(MemberAccount user)
         {
+            // 檢查輸入是否為空
+            if (string.IsNullOrEmpty(user.UserName) || string.IsNullOrEmpty(user.Password))
+            {
+                ViewData["result"] = "請輸入帳號和密碼";
+                return View(user);
+            }
+
             // 初始化資料庫連線並獲取帳號列表
             MemberConnection connection = new MemberConnection();
             List<MemberAccount> accounts = connection.getAccounts();
@@ -127,6 +136,12 @@ namespace HotelBookingSystem.Controllers
         {
             MemberConnection member = new MemberConnection();
 
+            // 驗證模型狀態是否有效
+            if (!ModelState.IsValid)
+            {
+                return View(user);
+            }
+
             // 可以在 newAccount 方法前檢查
             if (member.IsUserNameExists(user.UserName))
             {
@@ -140,6 +155,9 @@ namespace HotelBookingSystem.Controllers
             {
                 try
                 {
+                    // 設定加入日期為當前時間
+                    user.JoinDate = DateTime.Now;
+
                     // 將密碼進行 MD5 加密
                     user.Password = PasswordHelper.HashPassword(user.Password);
 
@@ -175,6 +193,10 @@ namespace HotelBookingSystem.Controllers
             {
                 ViewData["ValidPhone"] = user.Phone;
             }
+            if (ModelState["Birthday"] != null && ModelState["Birthday"].Errors.Count == 0)
+            {
+                ViewData["ValidBirthday"] = user.Birthday.ToString("yyyy-MM-dd");
+            }
 
             return View(user);
         }
@@ -189,7 +211,7 @@ namespace HotelBookingSystem.Controllers
         }
 
         [HttpPost]
-        public JsonResult OnSubmit([FromBody]MemberAccount user)
+        public JsonResult OnSubmit([FromBody] MemberAccount user)
         {
             // 建立資料庫連線物件
             MemberConnection connection = new MemberConnection();
@@ -203,9 +225,9 @@ namespace HotelBookingSystem.Controllers
             if (userExists)
             {
                 Console.WriteLine("帳號已存在");
-                return Json("帳號已存在");
+                return Json("帳號已存在, 請使用其他信箱註冊");
             }
-                
+
             else
             {
                 Console.WriteLine(user.UserName);
@@ -319,12 +341,20 @@ namespace HotelBookingSystem.Controllers
                     return BadRequest(new { success = false, message = "目前密碼不正確" });
                 }
 
+                // 檢查新密碼是否與當前密碼相同
+                if (PasswordHelper.VerifyPassword(model.NewPassword, user.Password))
+                {
+                    return BadRequest(new { success = false, message = "新密碼不能與目前密碼相同" });
+                }
+
                 // 更新密碼
                 user.Password = PasswordHelper.HashPassword(model.NewPassword);
                 _context.MemberAccounts.Update(user);
                 await _context.SaveChangesAsync();
 
-                return Ok(new { success = true, message = "密碼修改成功" });
+                // 登出
+                await HttpContext.SignOutAsync();
+                return Ok(new { success = true, message = "密碼修改成功，請重新登入", forceSignOut = true });
             }
             catch (Exception ex)
             {
@@ -332,5 +362,174 @@ namespace HotelBookingSystem.Controllers
                 return StatusCode(500, new { success = false, message = "發生未預期的錯誤" });
             }
         }
+
+        [HttpPost]
+        [Authorize]
+        [Route("api/[controller]/ChangePhone")]
+        public async Task<IActionResult> ChangePhoneApi([FromBody] ChangePhoneViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    errors = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                });
+            }
+
+            try
+            {
+                var user = await _context.MemberAccounts
+                    .FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
+
+                if (user == null)
+                {
+                    return NotFound(new { success = false, message = "找不到使用者" });
+                }
+
+                if (user.Phone != model.CurrentPhone)
+                {
+                    return BadRequest(new { success = false, message = "目前電話不正確" });
+                }
+
+                // 檢查新電話是否與當前電話相同
+                if (model.NewPhone == model.CurrentPhone)
+                {
+                    return BadRequest(new { success = false, message = "新電話不能與目前電話相同" });
+                }
+
+                
+
+                user.Phone = model.NewPhone;
+                _context.MemberAccounts.Update(user);
+                await _context.SaveChangesAsync();
+
+                // 登出
+                await HttpContext.SignOutAsync();
+                return Ok(new { success = true, message = "電話修改成功，請重新登入", forceSignOut = true });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "電話變更時發生錯誤");
+                return StatusCode(500, new { success = false, message = "發生未預期的錯誤" });
+            }
+        }
+
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            MemberConnection connection = new MemberConnection();
+            var accounts = connection.getAccounts();
+            var user = accounts.FirstOrDefault(a => a.UserName == model.Email);
+
+            if (user == null)
+            {
+                ViewData["IsError"] = true;
+                ViewData["Message"] = "找不到此電子信箱";
+                return View(model);
+            }
+
+            // 產生新密碼
+            string newPassword = GenerateRandomPassword();
+
+            // 更新資料庫中的密碼
+            user.Password = PasswordHelper.HashPassword(newPassword);
+            connection.UpdatePassword(user.MemberNo, user.Password);
+
+            // 發送郵件
+            try
+            {
+                using (var client = new SmtpClient("smtp.gmail.com", 587))
+                {
+                    client.EnableSsl = true;
+                    client.Credentials = new NetworkCredential("hotellazzydog@gmail.com", "lbiu mbvn zdsj zxei");
+
+                    var mailMessage = new MailMessage
+                    {
+                        From = new MailAddress("hotellazzydog@gmail.com", "四季飯店"),
+                        Subject = "四季飯店會員密碼重置",
+                        Body = 
+
+                        $@"<html>
+                            <body style='font-family: Arial, sans-serif; font-size: 18px;line-height: 1.6; color: #333;'>
+                                <p>親愛的四季飯店會員您好，：</p>
+
+                                <p>您的新密碼已經重置成功，請使用以下密碼登入四季飯店訂房系統：</p>
+
+                                <p style='font-size: 24px; color: #ff4500; font-weight: bold;'>
+                                    {newPassword}
+                                </p>
+
+                                <p>
+                                    為了保護您的帳號安全，請您登入後盡快修改密碼。<br>
+                                    建議您將密碼設為包含大寫字母、小寫字母、數字及特殊符號的組合，
+                                    並避免使用過於簡單的密碼。
+                                </p>
+
+                                <p>
+                                    您可以點擊以下連結登入系統：<br>
+                                    <a href='https://hotelfront.lazzydog.store:9985/Member/SignIn' 
+                                       style='color: #1a0dab; text-decoration: none; font-size: 24px;'>
+                                        點擊這裡登入系統
+                                    </a>
+                                </p>
+
+                                <p>
+                                    若您並未申請密碼重置，請立即與飯店聯繫，避免帳號遭到未授權的使用。
+                                </p>
+
+                                <p>
+                                    感謝您的使用，祝您順心！
+                                </p>
+
+                                <p>四季飯店系統管理團隊 敬上</p>
+                            </body>
+                            </html>",
+                        IsBodyHtml = true
+                    };
+                    mailMessage.To.Add(model.Email);
+
+                    await client.SendMailAsync(mailMessage);
+                }
+
+                TempData["SignInMessage"] = "新密碼已寄送至您的信箱";
+                return RedirectToAction("SignIn");
+            }
+            catch (Exception ex)
+            {
+                ViewData["IsError"] = true;
+                ViewData["Message"] = "寄送郵件時發生錯誤，請稍後再試";
+                return View(model);
+            }
+        }
+
+        private string GenerateRandomPassword()
+        {
+            const string chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
+            var random = new Random();
+            var password = new string(Enumerable.Repeat(chars, 12)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+
+            // 確保至少包含一個數字和一個字母
+            if (!password.Any(char.IsDigit) || !password.Any(char.IsLetter))
+            {
+                return GenerateRandomPassword();
+            }
+
+            return password;
+        }
+
     }
 }

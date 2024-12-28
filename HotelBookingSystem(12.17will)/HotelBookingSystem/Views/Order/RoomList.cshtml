@@ -7,22 +7,39 @@
 
 <div class="container mt-5">
     <h2 class="text-center">可預訂房型</h2>
+    <div class="alert alert-info text-center mt-3">
+        <strong>提示：</strong>目前只開放預訂三個月內的日期，超出此範圍的日期無法選擇。
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+            @TempData["ErrorMessage"]
+        </div>
+    }
 
     @if (ViewBag.Message != null)
     {
         <p class="alert alert-info text-center">@ViewBag.Message</p>
     }
+    else if (!Model.Any())
+    {
+        <p class="alert alert-warning text-center">目前沒有可用的房型。</p>
+    }
     else
     {
         <table class="table table-striped table-bordered mt-4">
             <thead class="thead-dark">
-                <tr>
-                    <th>房間編號</th>
+                <tr>                   
                     <th>房間名稱</th>
                     <th>價格 (每晚)</th>
                     <th>類型</th>
-                    <th>地址</th>
-                    <th>房間內容</th>
                     <th>操作</th>
                 </tr>
             </thead>
@@ -30,15 +47,11 @@
                 @foreach (var room in Model)
                 {
                     <tr>
-                        <td>@room.RoomNo</td>
                         <td>@room.RoomName</td>
                         <td>@room.Price</td>
                         <td>@room.RoomType</td>
-                        <td>@room.Address</td>
-                        <td>@room.RoomContent</td>
                         <td>
                             <a href="@Url.Action("ReserveRoomForm", "Order", new { roomNo = room.RoomNo })" class="btn btn-primary">預訂</a>
-                            <button class="btn btn-info check-availability" data-roomno="@room.RoomNo">查看可訂日</button>
                         </td>
                     </tr>
                 }
@@ -46,64 +59,3 @@
         </table>
     }
 </div>
-
-<!-- 可用性檢查 Modal -->
-<div id="availability-modal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">房間可用性</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div id="availability-dates" class="text-center"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-            // 點擊檢查可用性按鈕事件
-            $(".check-availability").click(function () {
-                var roomNo = $(this).data("roomno");
-                // 發送 AJAX 請求檢查房間可用性
-                $.ajax({
-                    url: `/Order/CheckRoomAvailability/${roomNo}`,
-                    type: "GET",
-                    success: function (response) {
-                        if (response.success) {
-                            let bookings = response.bookings;
-                            // 組裝顯示已預訂時間範圍的 HTML
-                            let availabilityHtml = bookings.map(booking =>
-                                `<p>已預訂：<strong>${booking.startDate}</strong> 至 <strong>${booking.endDate}</strong></p>`
-                            ).join("");
-                            if (availabilityHtml === "") {
-                                availabilityHtml = "<p>該房間目前完全可用。</p>";
-                            }
-                            // 將結果顯示在模態框中
-                            $("#availability-dates").html(availabilityHtml);
-                            $("#availability-modal").modal("show");
-                        } else {
-                            // 如果後端返回錯誤，顯示錯誤訊息
-                            alert(response.message || "無法檢查房間可用性。");
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        // 錯誤處理，顯示詳細的錯誤資訊
-                        console.error("AJAX Error: ", status, error);
-                        alert("檢查房間可用性時發生錯誤，請稍後再試！");
-                    }
-                });
-            });
-        });
-    </script>
-}
-
-}

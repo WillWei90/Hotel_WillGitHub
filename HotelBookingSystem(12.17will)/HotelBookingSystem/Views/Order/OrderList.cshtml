@@ -9,24 +9,32 @@
 
     @if (TempData["SuccessMessage"] != null)
     {
-        <div class="alert alert-success text-center">@TempData["SuccessMessage"]</div>
+        <div class="alert alert-success text-center">
+            @TempData["SuccessMessage"]
+        </div>
     }
     @if (TempData["ErrorMessage"] != null)
     {
-        <div class="alert alert-danger text-center">@TempData["ErrorMessage"]</div>
+        <div class="alert alert-danger text-center">
+            @TempData["ErrorMessage"]
+        </div>
     }
 
-    @if (Model.Any())
+    @if (ViewBag.Message != null)
     {
-        <table class="table table-striped">
+        <p class="alert alert-info text-center">@ViewBag.Message</p>
+    }
+    else if (Model != null && Model.Any())
+    {
+        <table class="table table-striped table-bordered">
             <thead>
                 <tr>
                     <th>訂單編號</th>
-                    <th>房間號</th>
-                    <th>會員編號</th>
+                    <th>房間名稱</th>
                     <th>訂單日期</th>
                     <th>入住日期</th>
                     <th>退房日期</th>
+                    <th>總金額</th>
                     <th>是否付款</th>
                     <th>訂房狀態</th>
                     <th>操作</th>
@@ -37,15 +45,22 @@
                 {
                     <tr>
                         <td>@order.OrderNo</td>
-                        <td>@order.RoomNo</td>
-                        <td>@order.MemberNo</td>
+                        <td>@order.RoomName</td>
                         <td>@order.OrderDate.ToString("yyyy-MM-dd")</td>
                         <td>@order.StartDate.ToString("yyyy-MM-dd")</td>
                         <td>@order.EndDate.ToString("yyyy-MM-dd")</td>
+                        <td>@order.TotalAmount.ToString("C")</td>
                         <td>@(order.IsPay ? "是" : "否")</td>
                         <td>@(order.Cancel ? "已取消" : "確認訂房")</td>
                         <td>
-                            <a href="@Url.Action("OrderDetails", "Order", new { orderNo = order.OrderNo })" class="btn btn-primary">查看詳情</a>
+                            <a href="@Url.Action("OrderDetails", "Order", new { orderNo = order.OrderNo })" class="btn btn-primary btn-sm">查看詳情</a>
+                            @if (!order.Cancel)
+                            {
+                                <form asp-action="CancelOrder" method="post" style="display: inline;">
+                                    <input type="hidden" name="orderNo" value="@order.OrderNo" />
+                                    <button type="submit" class="btn btn-danger btn-sm">取消訂單</button>
+                                </form>
+                            }
                         </td>
                     </tr>
                 }
@@ -54,6 +69,6 @@
     }
     else
     {
-        <p>目前沒有任何訂單。</p>
+        <p class="text-center">目前沒有任何訂單。</p>
     }
 </div>

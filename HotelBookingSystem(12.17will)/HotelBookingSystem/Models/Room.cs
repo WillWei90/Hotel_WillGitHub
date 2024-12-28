@@ -17,6 +17,12 @@ namespace HotelBookingSystem.Models
         public string RoomContent { get; set; }
         public bool Activate { get; set; }
 
+        public string? ImagePath { get; set; } // 可為 NULL
+        public int? RoomCapacity { get; set; } // 可為 NULL
+        public byte[]? ProfilePicture { get; set; } // 可為 NULL
+
+
+
         // 分頁屬性
         [NotMapped]
         public int TotalRecords { get; set; }

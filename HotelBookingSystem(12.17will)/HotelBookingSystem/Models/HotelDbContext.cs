@@ -15,18 +15,16 @@ namespace HotelBookingSystem.Models
 
         //will新增
         public DbSet<MemberAccount> MemberAccounts { get; set; }
+        public DbSet<QA> QAs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // ©ú½T«ü©wªí¦WºÙ
             modelBuilder.Entity<Order>().ToTable("Order");
 
-            // °t¸m Order Ãþ¹ïÀ³ªº¸ê®Æªí©M¥DÁä
             modelBuilder.Entity<Order>().ToTable("Order").HasKey(o => o.OrderNo);
 
-            // °t¸m Room Ãþ¹ïÀ³ªº¸ê®Æªí©M¥DÁä
             modelBuilder.Entity<Room>().ToTable("Room").HasKey(r => r.RoomNo);
             // will新增, 使用Member資料表, MemberNo為主鍵
             modelBuilder.Entity<MemberAccount>().ToTable("Member").HasKey(m => m.MemberNo); //指定資料表名稱

@@ -13,7 +13,7 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 
-    <title>飯店</title>
+    <title>LazzyDog Hotel</title>
 
 
     <!-- bootstrap core css -->
@@ -29,6 +29,9 @@
     <link href="~/css/style.css" rel="stylesheet" />
     <!-- responsive style -->
     <link href="~/css/responsive.css" rel="stylesheet" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <style>
         /* 固定 footer 在頁面底部 */
@@ -47,6 +50,24 @@
         body {
             margin-bottom: 50px; /* 增加與 footer 的距離，確保內容不被遮蓋 */
         }
+
+        .navbar-brand span {
+            font-size: 30px; /* 字體大小 */
+            font-family: 'Playfair Display', serif; /* 指定字型 */
+            font-weight: bold; /* 加粗 */
+            letter-spacing: 1px; /* 增加字距 */
+            color: #333; /* 字體顏色 */
+        }
+
+        .navbar-nav .nav-link {
+            font-size: 20px; /* 字體大小 */
+            font-family: 'Poppins', sans-serif; /* 字體樣式 */
+            font-weight: 600; /* 字體加粗 */
+        }
+
+            .navbar-nav .nav-link:hover {
+                text-decoration: underline; /* 滑鼠懸停效果 */
+            }
     </style>
 
     @RenderSection("styles", required: false)
@@ -58,9 +79,13 @@
         <!-- Header Section -->
         <header class="header_section long_section px-0">
             <nav class="navbar navbar-expand-lg custom_nav-container ">
-                <a class="navbar-brand" href="~/Home/Index">
-                    <span>飯店</span>
+                <a class="navbar-brand" href="~/Member/Index">
+                    <img src="@Url.Content("~/images/dog-icon.png")" alt="LazzyDog"
+                         style="width: 70px; height: 70px; margin-right: 10px;">
+                    <span>Lazzy Dog Hotel</span>
                 </a>
+                <!--FontStyle-->
+                <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class=""> </span>
                 </button>
@@ -75,13 +100,13 @@
                                 <a class="nav-link" href="~/Member/About">關於飯店</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="~/Home/Furniture">房型介紹</a>
+                                <a class="nav-link" href="~/Room/RoomList">房型介紹</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="~/Order/RoomList">馬上預定</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="~/Order/OrderList">查詢訂單</a>
+                                <a class="nav-link" href="~/FQA/Index">常見問答</a>
                             </li>
                         </ul>
                     </div>
@@ -101,46 +126,82 @@
                                 @(User.Identity.Name.Split('@')[0]) <!--取得 小老鼠符號之前的部分-->
                             </a>
                             <div class="dropdown-menu" aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#changePasswordModal">修改密碼</a>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#changeInfoModal">修改資料</a>
+                                <a class="dropdown-item" href="~/Order/OrderList">查詢訂單</a>
+                                <a class="dropdown-item" href="~/Order/Cart">購物車</a>
                                 <a class="dropdown-item" asp-controller="Member" asp-action="SignOut">登出</a>
                                 <!-- 可以添加其他用戶相關的選單項目 -->
                             </div>
                         </div>
                     }
-                    <!-- 修改密碼彈跳視窗 -->
-                    <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+                    <!-- 修改密碼或電話彈跳視窗 -->
+                    <div class="modal fade" id="changeInfoModal" tabindex="-1" role="dialog" aria-labelledby="changeInfoModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="changePasswordModalLabel">修改密碼</h5>
+                                    <h5 class="modal-title" id="changeInfoModalLabel">修改資訊</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
-                                <form id="changePasswordForm">
+                                <form id="changeInfoForm">
                                     <div class="modal-body">
+                                        <!-- 選擇修改項目 -->
                                         <div class="form-group">
-                                            <label for="currentPassword">目前密碼</label>
-                                            <input type="password" class="form-control" id="currentPassword" name="CurrentPassword" required>
-                                            <div class="invalid-feedback" id="currentPasswordError"></div>
+                                            <label for="changeOption">選擇修改項目</label>
+                                            <select class="form-control" id="changeOption" required>
+                                                <option value="" disabled selected>請選擇</option>
+                                                <option value="password">修改密碼</option>
+                                                <option value="phone">修改電話</option>
+                                            </select>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="newPassword">新密碼</label>
-                                            <input type="password" class="form-control" id="newPassword" name="NewPassword" required
-                                                   pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
-                                                   minlength="8">
-                                            <small class="form-text text-muted">密碼至少8個字元，包含至少一個字母和一個數字</small>
-                                            <div class="invalid-feedback" id="newPasswordError"></div>
+
+                                        <!-- 修改密碼表單 -->
+                                        <div id="passwordFields" style="display: none;">
+                                            <div class="form-group">
+                                                <label for="currentPassword">目前密碼</label>
+                                                <input type="password" class="form-control" id="currentPassword" name="CurrentPassword" 
+                                                       placeholder="目前密碼">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="newPassword">新密碼</label>
+                                                <input type="password" class="form-control" id="newPassword" name="NewPassword" 
+                                                       placeholder="新密碼至少8字元且有一個字母和一個數字"
+                                                       pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$">
+                                                <div class="invalid-feedback" id="newPasswordError"></div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="confirmPassword">確認新密碼</label>
+                                                <input type="password" class="form-control" id="confirmPassword" name="ConfirmPassword" 
+                                                       placeholder="再次輸入新密碼">
+                                                <div class="invalid-feedback" id="confirmPasswordError"></div>
+                                            </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="confirmPassword">確認新密碼</label>
-                                            <input type="password" class="form-control" id="confirmPassword" name="ConfirmPassword" required>
-                                            <div class="invalid-feedback" id="confirmPasswordError"></div>
+
+                                        <!-- 修改電話表單 -->
+                                        <div id="phoneFields" style="display: none;">
+                                            <div class="form-group">
+                                                <label for="currentPhone">目前電話</label>
+                                                <input type="text" class="form-control" id="currentPhone" name="CurrentPhone" pattern="^09\d{8}$" 
+                                                       placeholder="目前電話">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="newPhone">新電話</label>
+                                                <input type="text" class="form-control" id="newPhone" name="NewPhone" pattern="^09\d{8}$" 
+                                                       placeholder="新電話">
+                                                <div class="invalid-feedback" id="newPhoneError"></div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="confirmPhone">確認新電話</label>
+                                                <input type="text" class="form-control" id="confirmPhone" name="ConfirmPhone" pattern="^09\d{8}$" 
+                                                       placeholder="再次輸入新電話">
+                                                <div class="invalid-feedback" id="confirmPhoneError"></div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                                        <button type="submit" class="btn btn-primary" id="changePasswordSubmit">確認變更</button>
+                                        <button type="submit" class="btn btn-primary">確認變更</button>
                                     </div>
                                 </form>
                             </div>
@@ -162,7 +223,7 @@
         <div class="container text-center">
             <p>
                 &copy; <span id="displayYear"></span> 網頁來源
-                <a href="https://html.design/">飯店</a>
+                <a href="~/Member/Index">LazzyDogHotel</a>
             </p>
         </div>
     </footer>
@@ -173,21 +234,132 @@
     <script src="~/js/slick.min.js"></script>
     <script src="~/js/custom.js"></script>
 
-    <script> //改密碼使用的script
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.getElementById('changeOption').addEventListener('change', function () {
+            const option = this.value;
+            document.getElementById('passwordFields').style.display = option === 'password' ? 'block' : 'none';
+            document.getElementById('phoneFields').style.display = option === 'phone' ? 'block' : 'none';
+        });
+    </script>
+
+    <script> //改密碼或電話用的script
         $(document).ready(function () {
-            $('#changePasswordForm').on('submit', function (e) {
+            $('#changeInfoForm').on('submit', function (e) {
                 e.preventDefault();
 
-                // 清除之前的錯誤
+                // 判斷選擇的是密碼還是電話
+                const selectedOption = $('#changeOption').val();
+
+                if (selectedOption === 'password') {
+                    handleChangePassword();
+                } else if (selectedOption === 'phone') {
+                    handleChangePhone();
+                } else {
+                    alert('請選擇要修改的項目');
+                }
+            });
+
+            $(document).ready(function () {
+                $('#changeOption').on('change', function () {
+                    const selectedOption = $(this).val();
+
+                    // 動態顯示不同的表單欄位
+                    if (selectedOption === 'password') {
+                        $('#passwordFields').show();
+                        $('#phoneFields').hide();
+                    } else if (selectedOption === 'phone') {
+                        $('#passwordFields').hide();
+                        $('#phoneFields').show();
+                    } else {
+                        $('#passwordFields').hide();
+                        $('#phoneFields').hide();
+                    }
+                });
+            });
+
+            function handleResponse(response) {
+                if (response.success) {
+                    alert(response.message);
+
+                    if (response.forceSignOut) {
+                        // 強制登出並重定向到登入頁
+                        window.location.href = 'Member/SignIn?forceSignOut=true';
+                    } else {
+                        // 關閉彈跳視窗
+                        $('#changeInfoModal').modal('hide');
+                    }
+                }
+            }
+
+            $('#newPassword').on('input', function () {
+                const newPassword = $(this).val();
+                const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
+                if (newPassword === '') {
+                    // 清空時恢復預設狀態
+                    $(this).removeClass('is-invalid').removeClass('border-success');
+                    $('#newPasswordError').text('');
+                } else if (passwordRegex.test(newPassword)) {
+                    // 符合格式時顯示綠色邊框
+                    $(this).removeClass('is-invalid').addClass('border-success');
+                    $('#newPasswordError').text('');
+                } else {
+                    // 不符合格式時顯示紅色邊框和錯誤訊息
+                    $(this).addClass('is-invalid').removeClass('border-success');
+                    $('#newPasswordError').text('密碼至少8字元且有一個字母和一個數字');
+                }
+            });
+
+            $('#newPhone').on('input', function () {
+                const newPhone = $(this).val();
+                const phoneRegex = /^09\d{8}$/;
+
+                if (newPhone === '') {
+                    // 清空時恢復預設狀態
+                    $(this).removeClass('is-invalid').removeClass('border-success');
+                    $('#newPhoneError').text('');
+                } else if (phoneRegex.test(newPhone)) {
+                    // 符合格式時顯示綠色邊框
+                    $(this).removeClass('is-invalid').addClass('border-success');
+                    $('#newPhoneError').text('');
+                } else {
+                    // 不符合格式時顯示紅色邊框和錯誤訊息
+                    $(this).addClass('is-invalid').removeClass('border-success');
+                    $('#newPhoneError').text('請輸入有效手機號碼');
+                }
+            });
+
+
+            function handleChangePassword() {
+                // 清除之前的錯誤和成功樣式
                 $('.is-invalid').removeClass('is-invalid');
+                $('.border-success').removeClass('border-success');
                 $('.invalid-feedback').text('');
 
-                // 檢查密碼一致性
-                var newPassword = $('#newPassword').val();
-                var confirmPassword = $('#confirmPassword').val();
+                const currentPassword = $('#currentPassword').val();
+                const newPassword = $('#newPassword').val();
+                const confirmPassword = $('#confirmPassword').val();
 
+                // 檢查新密碼是否與目前密碼相同
+                if (newPassword === currentPassword) {
+                    $('#newPassword').addClass('is-invalid').removeClass('border-success');
+                    $('#newPasswordError').text('新密碼不能與目前密碼相同');
+                    return;
+                }
+
+                // 檢查密碼格式
+                const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+                if (!passwordRegex.test(newPassword)) {
+                    $('#newPassword').addClass('is-invalid').removeClass('border-success');
+                    $('#newPasswordError').text('密碼至少8字元且至少一個字母和一個數字');
+                    return;
+                }
+
+                // 檢查密碼一致性
                 if (newPassword !== confirmPassword) {
-                    $('#confirmPassword').addClass('is-invalid');
+                    $('#confirmPassword').addClass('is-invalid').removeClass('border-success');
                     $('#confirmPasswordError').text('新密碼和確認密碼不相符');
                     return;
                 }
@@ -202,33 +374,93 @@
                         ConfirmPassword: confirmPassword
                     }),
                     success: function (response) {
-                        if (response.success) {
-                            // 成功提示
-                            alert(response.message);
-                            $('#changePasswordModal').modal('hide');
-                        }
+                        handleResponse(response);
                     },
                     error: function (xhr) {
-                        var response = xhr.responseJSON;
-
-                        if (response.errors) {
-                            // 處理模型驗證錯誤
-                            response.errors.forEach(function (error) {
-                                if (error.toLowerCase().includes('current')) {
-                                    $('#currentPassword').addClass('is-invalid');
-                                    $('#currentPasswordError').text(error);
-                                } else if (error.toLowerCase().includes('new')) {
-                                    $('#newPassword').addClass('is-invalid');
-                                    $('#newPasswordError').text(error);
-                                }
-                            });
-                        } else if (response.message) {
-                            // 處理伺服器返回的錯誤訊息
-                            alert(response.message);
-                        }
+                        handleErrors(xhr);
                     }
                 });
-            });
+            }
+
+            function handleChangePhone() {
+                // 清除之前的錯誤和成功樣式
+                $('.is-invalid').removeClass('is-invalid');
+                $('.border-success').removeClass('border-success');
+                $('.invalid-feedback').text('');
+
+                const currentPhone = $('#currentPhone').val();
+                const newPhone = $('#newPhone').val();
+                const confirmPhone = $('#confirmPhone').val();
+
+                // 檢查新電話是否與目前電話相同
+                if (newPhone === currentPhone) {
+                    $('#newPhone').addClass('is-invalid').removeClass('border-success');
+                    $('#newPhoneError').text('新電話不能與目前電話相同');
+                    return;
+                }
+
+                // 檢查電話格式
+                const phoneRegex = /^09\d{8}$/;
+                if (!phoneRegex.test(newPhone)) {
+                    $('#newPhone').addClass('is-invalid').removeClass('border-success');
+                    $('#newPhoneError').text('請輸入有效手機號碼');
+                    return;
+                }
+
+                // 檢查電話一致性
+                if (newPhone !== confirmPhone) {
+                    $('#confirmPhone').addClass('is-invalid').removeClass('border-success');
+                    $('#confirmPhoneError').text('新電話和確認電話不相符');
+                    return;
+                }
+
+                $.ajax({
+                    url: '/api/Member/ChangePhone',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        CurrentPhone: $('#currentPhone').val(),
+                        NewPhone: newPhone,
+                        ConfirmPhone: confirmPhone
+                    }),
+                    success: function (response) {
+                        handleResponse(response);
+                    },
+                    error: function (xhr) {
+                        handleErrors(xhr);
+                    }
+                });
+            }
+
+            function handleErrors(xhr) {
+                const response = xhr.responseJSON;
+
+                if (response.errors) {
+                    response.errors.forEach(function (error) {
+                        if (error.toLowerCase().includes('currentpassword')) {
+                            $('#currentPassword').addClass('is-invalid');
+                            $('#currentPasswordError').text(error);
+                        } else if (error.toLowerCase().includes('newpassword')) {
+                            $('#newPassword').addClass('is-invalid');
+                            $('#newPasswordError').text(error);
+                        } else if (error.toLowerCase().includes('confirmpassword')) {  // 加入這個條件
+                            $('#confirmPassword').addClass('is-invalid');
+                            $('#confirmPasswordError').text(error);
+                        } else if (error.toLowerCase().includes('currentphone')) {
+                            $('#currentPhone').addClass('is-invalid');
+                            $('#currentPhoneError').text(error);
+                        } else if (error.toLowerCase().includes('newphone')) {
+                            $('#newPhone').addClass('is-invalid');
+                            $('#newPhoneError').text(error);
+                        } else if (error.toLowerCase().includes('confirmphone')) {  // 加入這個條件
+                            $('#confirmPhone').addClass('is-invalid');
+                            $('#confirmPhoneError').text(error);
+                        }
+                    });
+                } else if (response.message) {
+                    alert(response.message);
+                }
+            }
         });
     </script>
 

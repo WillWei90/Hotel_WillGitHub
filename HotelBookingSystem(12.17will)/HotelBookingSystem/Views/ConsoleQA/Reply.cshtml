@@ -1,0 +1,23 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutConsole.cshtml"; // 使用 _Layout.cshtml 作為布局
+    ViewData["Title"] = "回覆問題";
+}
+
+@model HotelBookingSystem.Models.QA
+
+<h1>回覆問題</h1>
+<form asp-action="Reply" method="post">
+    <div class="form-group">
+        <label>問題內容</label>
+        <p>@Model.Question</p> <!-- 單一物件可以直接使用屬性 -->
+    </div>
+    <div class="form-group">
+        <label for="Answer">回答</label>
+        <textarea id="Answer" name="Answer" class="form-control">@Model.Answer</textarea>
+    </div>
+    <div class="form-group">
+        <label for="Name">回答人</label>
+        <input id="Name" name="Name" class="form-control" value="@Model.Name" />
+    </div>
+    <button type="submit" class="btn btn-primary">提交</button>
+</form>

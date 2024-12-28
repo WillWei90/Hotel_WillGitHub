@@ -40,6 +40,8 @@ namespace HotelBookingSystem.Models
                         UserName = reader.GetString(reader.GetOrdinal("UserName")),
                         Password = reader.GetString(reader.GetOrdinal("Password")),
                         Phone = reader.GetString(reader.GetOrdinal("Phone")),
+                        Birthday = reader.GetDateTime(reader.GetOrdinal("Birthday")),
+                        JoinDate = reader.GetDateTime(reader.GetOrdinal("JoinDate"))
                     };
                     accounts.Add(myAccount);
                 }
@@ -55,20 +57,31 @@ namespace HotelBookingSystem.Models
         //資料庫寫入
         public void newAccount(MemberAccount user)
         {
+            if (string.IsNullOrEmpty(user.UserName) ||
+                string.IsNullOrEmpty(user.Password) ||
+                string.IsNullOrEmpty(user.Phone) ||
+                user.Birthday == default)
+            {
+                throw new ArgumentException("註冊資料不可為空");
+            }
+
             //string myMemberNo = user.MemberNo;
             string myUserName = user.UserName;
             string myPassword = user.Password;
             string myPhone = user.Phone;
+            string myBirthday = user.Birthday.ToString();
 
             SqlConnection sqlconnection = new SqlConnection(connStr);
-            SqlCommand sqlcommand = new SqlCommand(@"INSERT INTO Member(UserName,Password,Phone) VALUES(@myUserName,@myPassword,@myPhone)");
+            SqlCommand sqlcommand = new SqlCommand(@"INSERT INTO Member(UserName,Password,Birthday,Phone) VALUES(@myUserName,@myPassword, @myBirthday,@myPhone)");
             sqlcommand.Connection = sqlconnection;
 
             //加入帳號密碼電話
             //sqlcommand.Parameters.Add(new SqlParameter("@myMemberNo", user.MemberNo));
             sqlcommand.Parameters.Add(new SqlParameter("@myUserName", user.UserName));
             sqlcommand.Parameters.Add(new SqlParameter("@myPassword", user.Password));
+            sqlcommand.Parameters.Add(new SqlParameter("@myBirthday", user.Birthday));
             sqlcommand.Parameters.Add(new SqlParameter("@myPhone", user.Phone));
+
 
             //執行語法
             sqlconnection.Open();
@@ -95,6 +108,39 @@ namespace HotelBookingSystem.Models
 
                     // 如果count > 0，表示帳號已存在
                     return count > 0;
+                }
+            }
+        }
+
+        public void UpdatePassword(int memberNo, string hashedPassword)
+        {
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                try
+                {
+                    conn.Open();
+                    string sql = @"UPDATE Member 
+                             SET Password = @Password 
+                             WHERE MemberNo = @MemberNo";
+
+                    using (SqlCommand cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Password", hashedPassword);
+                        cmd.Parameters.AddWithValue("@MemberNo", memberNo);
+
+                        int rowsAffected = cmd.ExecuteNonQuery();
+
+                        if (rowsAffected == 0)
+                        {
+                            throw new Exception("找不到指定的會員編號");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // 記錄錯誤並重新拋出
+                    // 您可以加入自己的錯誤處理邏輯
+                    throw new Exception($"更新密碼時發生錯誤: {ex.Message}", ex);
                 }
             }
         }
