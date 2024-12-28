@@ -1,59 +1,35 @@
 ﻿@{
     Layout = null; // 不使用布局
+    var adminAccount = ViewBag.AdminAccount as string;
+    var adminPassword = ViewBag.AdminPassword as string;
 }
 
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8">
-    <title>X飯店後台管理系統-登入</title>
+    <title>LazzyDog Hotel後台管理系統-登入</title>
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" asp-append-version="true" />
-
-    <style>
-        html,
-        body {
-            height: 100%;
-        }
-
-        body {
-            display: flex;
-            align-items: center;
-            padding-top: 40px;
-            padding-bottom: 40px;
-            background-color: #f5f5f5;
-        }
-
-        .form-signin {
-            max-width: 330px;
-            padding: 15px;
-        }
-
-            .form-signin .form-floating:focus-within {
-                z-index: 2;
-            }
-
-            .form-signin input[type="email"] {
-                margin-bottom: -1px;
-                border-bottom-right-radius: 0;
-                border-bottom-left-radius: 0;
-            }
-
-            .form-signin input[type="password"] {
-                margin-bottom: 10px;
-                border-top-left-radius: 0;
-                border-top-right-radius: 0;
-            }
-
-        .alert {
-            margin-top: 20px;
-        }
-    </style>
 </head>
 <body class="text-center">
 
     <main class="form-signin w-100 m-auto">
         <h1 class="h3 mb-3 fw-normal">X飯店後台管理系統</h1>
+
+        <!-- Admin 初始化提示 -->
+        @if (!string.IsNullOrEmpty(adminAccount) && !string.IsNullOrEmpty(adminPassword))
+        {
+            <div class="alert alert-info text-start" role="alert">
+                <h5 class="alert-heading">系統初始化完成！</h5>
+                <p>以下為預設的 Admin 帳號與密碼：</p>
+                <ul>
+                    <li><strong>帳號：</strong>@adminAccount</li>
+                    <li><strong>密碼：</strong>@adminPassword</li>
+                </ul>
+                <p class="mb-0">請登入後務必更改密碼以確保系統安全。</p>
+            </div>
+        }
 
         <form id="loginForm">
             <div class="form-floating">
@@ -105,3 +81,43 @@
     </script>
 </body>
 </html>
+
+<style>
+    html,
+    body {
+        height: 100%;
+    }
+
+    body {
+        display: flex;
+        align-items: center;
+        padding-top: 40px;
+        padding-bottom: 40px;
+        background-color: #f5f5f5;
+    }
+
+    .form-signin {
+        max-width: 330px;
+        padding: 15px;
+    }
+
+        .form-signin .form-floating:focus-within {
+            z-index: 2;
+        }
+
+        .form-signin input[type="email"] {
+            margin-bottom: -1px;
+            border-bottom-right-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        .form-signin input[type="password"] {
+            margin-bottom: 10px;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+
+    .alert {
+        margin-top: 20px;
+    }
+</style>
