@@ -21,21 +21,60 @@ namespace HotelBookingSystem.Controllers
 
         public IActionResult Login()
         {
+            ViewBag.AdminAccount = TempData["AdminAccount"];
+            ViewBag.AdminPassword = TempData["AdminPassword"];
+
             return View();
         }
 
         public IActionResult Home()
         {
+            // 確保系統初始化時存在 admin 帳號
+            EnsureAdminExists();
+
             var session = _httpContextAccessor.HttpContext?.Session;
             ViewBag.UserName = session?.GetString("UserName");
 
             if (string.IsNullOrEmpty(ViewBag.UserName))
             {
-                // 如果 Session 中沒有 UserName，重定向到登錄頁面
+                // 如果 Session 中沒有 UserName，將初始化資訊傳遞到 Login 頁面
+                var adminAccount = session?.GetString("AdminAccount");
+                var adminPassword = session?.GetString("AdminPassword");
+
+                TempData["AdminAccount"] = adminAccount;
+                TempData["AdminPassword"] = adminPassword;
+
                 return RedirectToAction("Login", "ConsoleHome");
             }
 
             return View();
+        }
+
+        private void EnsureAdminExists()
+        {
+            var admin = _context.Users.FirstOrDefault(u => u.UserName == "admin");
+            if (admin == null)
+            {
+                // 如果系統中沒有 admin，創建一個
+                var defaultAdminPassword = "1"; // 預設密碼
+                var mail = "hotellazzydog@gmail.com";
+                var newAdmin = new User
+                {
+                    UserName = "Admin",
+                    Password = PasswordHelper.HashPassword(defaultAdminPassword),
+                    PermissionFlag = "Admin",
+                    Activate = true,
+                    Email = mail
+                };
+
+                _context.Users.Add(newAdmin);
+                _context.SaveChanges();
+
+                // 將 admin 資訊儲存到 Session，用於顯示提示
+                var session = _httpContextAccessor.HttpContext?.Session;
+                session?.SetString("AdminAccount", "admin");
+                session?.SetString("AdminPassword", defaultAdminPassword);
+            }
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
