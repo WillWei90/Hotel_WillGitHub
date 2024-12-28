@@ -38,6 +38,4 @@ Debug/
 **/*.pubxml.user
 **/*.publishproj
 **/*.csproj.user
-/HotelBookingSystem(12.17will)/HotelBookingSystem/bin/Release/net8.0/HotelBookingSystem.dll
-/HotelBookingSystem(12.17will)/HotelBookingSystem/bin/Release/net8.0/HotelBookingSystem.exe
-/HotelBookingSystem(12.17will)/HotelBookingSystem/bin/Release/net8.0/HotelBookingSystem.pdb
+
