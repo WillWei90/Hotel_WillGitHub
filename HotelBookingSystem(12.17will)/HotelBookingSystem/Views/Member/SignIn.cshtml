@@ -6,6 +6,20 @@
 
 @section styles{
     <style>
+        .alert-banner {
+            width: 80%; /* 控制寬度 */
+            max-width: 600px; /* 最大寬度 */
+            padding: 15px;
+            background-color: #e8f5e9;
+            color: #333;
+            text-align: center;
+            margin: 20px auto; /* 垂直和水平置中 */
+            position: relative; /* 不再固定位置 */
+            z-index: 1000;
+            border-radius: 8px; /* 加入圓角效果 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 加入陰影 */
+        }
+
         .login-container {
             position: absolute; /* 絕對定位，方便放置於視窗中央 */
             top: 50%;
@@ -19,43 +33,57 @@
             text-align: center; /* 內容置中 */
         }
 
-            .login-container .form-group {
-                display: flex; /* 使用 Flexbox 使 label 和 input 水平排列 */
-                align-items: center; /* 垂直方向置中對齊 */
-                margin-bottom: 15px; /* 增加每組輸入框的間距 */
-                justify-content: center; /* 將按鈕置中 */
-            }
+        .login-container .form-group {
+            display: flex; /* 使用 Flexbox 使 label 和 input 水平排列 */
+            align-items: center; /* 垂直方向置中對齊 */
+            margin-bottom: 15px; /* 增加每組輸入框的間距 */
+            justify-content: center; /* 將按鈕置中 */
+        }
 
-            .login-container label {
-                width: 80px; /* 固定 label 寬度 */
-                text-align: right; /* 文字靠右對齊 */
-                margin-right: 10px; /* 與輸入框保持適當距離 */
-            }
+        .login-container label {
+            width: 80px; /* 固定 label 寬度 */
+            text-align: right; /* 文字靠右對齊 */
+            margin-right: 10px; /* 與輸入框保持適當距離 */
+        }
 
-            .login-container input {
-                flex: 1; /* 讓輸入框自適應剩餘空間 */
-                padding: 8px;
-                box-sizing: border-box; /* 包括內邊距和邊框 */
-            }
+        .login-container input {
+            flex: 1; /* 讓輸入框自適應剩餘空間 */
+            padding: 8px;
+            box-sizing: border-box; /* 包括內邊距和邊框 */
+        }
 
-            .login-container .btn-submit {
+        .login-container .btn-submit {
                 
-                padding: 10px 20px;
-                background-color: #007bff;
-                color: #fff;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-            }
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
 
-                .login-container button:hover {
-                    background-color: #0056b3;
-                }
+        .login-container button:hover {
+            background-color: #0056b3;
+        }
 
-            .login-container p {
-                margin-top: 12px;
-            }
+        .login-container p {
+            margin-top: 12px;
+        }
     </style>
+}
+
+@if (!string.IsNullOrEmpty(Context.Request.Query["forceSignOut"].ToString()))
+{
+    <div class="alert-banner">
+        由於您已更新密碼或電話號碼，請重新登入以繼續使用。
+    </div>
+}
+
+@if (TempData["SignOutMessage"] != null)
+{
+    <div class="alert-banner">
+        @TempData["SignOutMessage"]
+    </div>
 }
 
 <div class="login-container">
@@ -103,47 +131,5 @@
     </div>
 </div>
 
-@if (TempData["SignOutMessage"] != null)
-{
-    <div class="alert alert-success">
-        @TempData["SignOutMessage"]
-    </div>
-}
 
-<!--顯示提示的小彈窗-->
-<div id="signInAlert" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="signInAlertLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="signInAlertLabel">請重新登入</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>由於您已更新密碼或電話號碼，請重新登入以繼續使用。</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">確認</button>
-            </div>
-        </div>
-    </div>
-</div>
 
-@section scripts {
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            const params = new URLSearchParams(window.location.search);
-
-            if (params.has('forceSignOut')) {
-                $('#signInAlert').modal('show');
-
-                // 綁定按鈕的關閉事件，確保可以正常關閉模態框
-                $('#signInAlert .btn-primary, #signInAlert .close').on('click', function () {
-                    $('#signInAlert').modal('hide');
-                });
-            }
-        });
-    </script>
-}
