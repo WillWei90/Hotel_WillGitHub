@@ -7,7 +7,7 @@
 <!-- 新增用户按钮 -->
 <div class="mb-3">
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
-        Add New User
+        新增使用者
     </button>
 </div>
 
@@ -74,7 +74,7 @@
                         <!-- 直接呼叫 API 更改密碼 -->
                         <form method="post" asp-controller="ConsoleUser" asp-action="ChangePassword" onsubmit="return confirm('確定要重設密碼?');">
                             <input type="hidden" name="AdminNo" value="@user.AdminNo" />
-                            <button type="submit" class="btn btn-warning">Reset Password</button>
+                            <button type="submit" class="btn btn-warning">重置密碼</button>
                         </form>
                     </td>
                 </tr>
