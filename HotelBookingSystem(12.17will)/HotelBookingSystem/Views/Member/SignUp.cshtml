@@ -178,29 +178,13 @@
                     const password = $("#inputPassword").val();
                     const phone = $("#inputPhone").val();
 
-                    // Validate all fields
-                    const isPasswordValid = validatePassword(password);
-                    const isPhoneValid = validatePhone(phone);
+                // 如果任一驗證失敗，不提交表單
+                if (!usernameRegex.test(userName) || !passwordRegex.test(password) || !phoneRegex.test(phone)) {
+                    return;
+                }
 
-                    // Check email availability
-                    $.ajax({
-                        type: "POST",
-                        url: "/Member/OnSubmit",
-                        data: JSON.stringify({ UserName: userName }),
-                        contentType: 'application/json; charset=utf-8',
-                        dataType: 'json',
-                        success: function(result) {
-                        if (result == "帳號已存在, 請使用其他信箱註冊") {
-                                $("#userNameStatus").text(result);
-                            } else if (!isPasswordValid || !isPhoneValid) {
-                                // Don't submit if password or phone is invalid
-                                return;
-                            } else {
-                                // If all validations pass, submit the form
-                                $("form").off("submit").submit();
-                            }
-                        }
-                    });
+                // 通過驗證後提交表單
+                this.submit();
                 });
             });
 

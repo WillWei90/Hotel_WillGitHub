@@ -458,15 +458,15 @@ namespace HotelBookingSystem.Controllers
 
                     var mailMessage = new MailMessage
                     {
-                        From = new MailAddress("hotellazzydog@gmail.com", "四季飯店"),
-                        Subject = "四季飯店會員密碼重置",
+                        From = new MailAddress("hotellazzydog@gmail.com", "LAZZY DOG HOTEL"),
+                        Subject = "LAZZY DOG HOTEL會員密碼重置",
                         Body = 
 
                         $@"<html>
                             <body style='font-family: Arial, sans-serif; font-size: 18px;line-height: 1.6; color: #333;'>
-                                <p>親愛的四季飯店會員您好，：</p>
+                                <p>親愛的會員您好，：</p>
 
-                                <p>您的新密碼已經重置成功，請使用以下密碼登入四季飯店訂房系統：</p>
+                                <p>您的新密碼已經重置成功，請使用以下密碼登入LAZZY DOG HOTEL訂房系統：</p>
 
                                 <p style='font-size: 24px; color: #ff4500; font-weight: bold;'>
                                     {newPassword}
@@ -487,14 +487,14 @@ namespace HotelBookingSystem.Controllers
                                 </p>
 
                                 <p>
-                                    若您並未申請密碼重置，請立即與飯店聯繫，避免帳號遭到未授權的使用。
+                                    若您並未申請密碼重置，請立即與LAZZY DOG HOTE聯繫，避免帳號遭到未授權的使用。
                                 </p>
 
                                 <p>
                                     感謝您的使用，祝您順心！
                                 </p>
 
-                                <p>四季飯店系統管理團隊 敬上</p>
+                                <p>LAZZY DOG HOTE系統管理團隊 敬上</p>
                             </body>
                             </html>",
                         IsBodyHtml = true
