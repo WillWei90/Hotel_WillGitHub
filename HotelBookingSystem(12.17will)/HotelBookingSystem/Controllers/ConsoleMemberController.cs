@@ -46,7 +46,9 @@ namespace HotelBookingSystem.Controllers
                         {
                             MemberNo = m.MemberNo,
                             UserName = m.UserName,
-                            Phone = m.Phone
+                            Phone = m.Phone,
+                            Birthday = m.Birthday,
+                            JoinDate = m.JoinDate
                         })
                         .ToList();
                 }
@@ -59,7 +61,9 @@ namespace HotelBookingSystem.Controllers
                         {
                             MemberNo = m.MemberNo,
                             UserName = m.UserName,
-                            Phone = m.Phone
+                            Phone = m.Phone,
+                            Birthday = m.Birthday,
+                            JoinDate = m.JoinDate
                         })
                         .ToList();
                 }
