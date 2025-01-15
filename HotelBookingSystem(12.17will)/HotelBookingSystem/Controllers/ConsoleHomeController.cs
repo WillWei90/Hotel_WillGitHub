@@ -145,6 +145,7 @@ namespace HotelBookingSystem.Controllers
             if (permissionFlag == "Admin")
             {
                 menuHtml = @"
+            <li class='nav-item'><a class='nav-link text-dark' href='/ConsoleReport/ConsoleReport'>報表管理</a></li>
             <li class='nav-item'><a class='nav-link text-dark' href='/ConsoleMember/MemberManagement'>會員管理</a></li>
             <li class='nav-item'><a class='nav-link text-dark' href='/ConsoleOrder/OrderManagement'>訂單管理</a></li>
             <li class='nav-item'><a class='nav-link text-dark' href='/ConsoleRoom/Room'>客房管理</a></li>

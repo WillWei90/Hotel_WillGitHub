@@ -71,6 +71,9 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Render additional scripts from specific views -->
+    @RenderSection("Scripts", required: false)
     <script>
         $(document).ready(function () {
             // 調用 API 獲取用戶名稱和菜單

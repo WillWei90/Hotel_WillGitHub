@@ -117,4 +117,8 @@ app.MapControllerRoute(
     name: "User",
     pattern: "{controller=ConsoleUser}/{action=UserManagement}/{id?}");
 
+app.MapControllerRoute(
+    name: "Report",
+    pattern: "{controller=ConsoleReport}/{action=ConsoleReport}/{id?}");
+
 app.Run();
