@@ -1,0 +1,30 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutConsole.cshtml"; // 使用 _LayoutConsole.cshtml 作為布局
+    ViewData["Title"] = "報表管理";
+}
+
+<h2>日期查詢</h2>
+
+@if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
+    <div style="color: red;">@ViewBag.ErrorMessage</div>
+}
+
+<form method="post" action="/ConsoleReport/Query">
+    <label for="startDate">開始日期：</label>
+    <input type="date" id="startDate" name="startDate" value="@ViewBag.StartDate" required />
+    <br />
+
+    <label for="endDate">結束日期：</label>
+    <input type="date" id="endDate" name="endDate" value="@ViewBag.EndDate" required />
+    <br />
+
+    <button type="submit">提交查詢</button>
+</form>
+
+@if (!string.IsNullOrEmpty(ViewBag.ImageUrl))
+{
+    <h3>查詢結果</h3>
+    <p>以下是查詢結果：</p>
+    <img src="@ViewBag.ImageUrl" alt="查詢結果" style="max-width: 100%; height: auto;" />
+}

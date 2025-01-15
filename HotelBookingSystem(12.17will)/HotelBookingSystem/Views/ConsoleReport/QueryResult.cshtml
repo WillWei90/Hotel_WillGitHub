@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "查詢結果";
+}
+
+<h2>查詢結果</h2>
+
+@if (!string.IsNullOrEmpty(ViewBag.ImageUrl))
+{
+    <p>以下是查詢結果：</p>
+    <img src="@ViewBag.ImageUrl" alt="查詢結果" style="max-width: 100%; height: auto;" />
+}
+else
+{
+    <p>未找到任何圖表。</p>
+}
